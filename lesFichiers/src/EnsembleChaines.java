@@ -1,3 +1,5 @@
+package src;
+
 import java.util.ArrayList;
 public class EnsembleChaines {
     ArrayList<ChainePositionnee> chaines;
