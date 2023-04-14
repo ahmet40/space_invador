@@ -1,5 +1,3 @@
-package src;
-
 public class ChainePositionnee{
     int x,y;
     String c;

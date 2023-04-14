@@ -1,5 +1,3 @@
-package src;
-
 import java.util.List;
 import java.util.ArrayList;
 
@@ -11,16 +9,25 @@ public class GestionJeu{
     private int hauteur;
     private int largeur;
     private int positionX=0;
-    private EnsembleChaines e;
     private Vaisseau v;
+    private Projectile projectile;
+    private Score score;
+    private List<Alien> lesAliens;
     /**
      * ceci est la methode qui va crée notre gestionnaire de jeu
      */
     public GestionJeu(){
         this.hauteur=60;
         this.largeur=100;
-        this.e= new EnsembleChaines();
-        this.v=new Vaisseau(0);
+        this.projectile=null;
+        this.v=new Vaisseau(30);
+        this.score=new Score();
+        this.lesAliens=new ArrayList<>();
+        for (int i=0;i<4;i++){
+            for (int j=0;j<2;j++){
+                this.lesAliens.add(new Alien(i*15, j*15+20));
+            }
+        }
     }
     /**
      * permet de renvoyer la hauteur 
@@ -40,9 +47,8 @@ public class GestionJeu{
      * va renvoyer un message lorsque nous allons appuyer sur la touche gauche
      */
     public void toucheGauche(){
-        if (positionX-4>0){
-            this.positionX-=4;
-            v.deplace(positionX);
+        if (this.v.getPosX()-4>0){
+            v.deplace(-4);
         }
         System.out.println("Appui sur la touche gauche");
     }
@@ -50,9 +56,8 @@ public class GestionJeu{
      * va renvoyer un message lorsque nous allons appuyer sur la touche droite
      */
     public void toucheDroite(){
-        if (positionX+4<this.largeur){
-            this.positionX+=4;
-            v.deplace(positionX);
+        if (this.v.getPosX()+4<this.largeur-16){
+            v.deplace(4);
         }
         System.out.println("Appui sur la touche droite");
     }
@@ -60,17 +65,32 @@ public class GestionJeu{
      * va renvoyer un message lorsque nous allons appuyer sur la touche espace
      */
     public void toucheEspace(){
+        if (projectile==null){
+            this.projectile=new Projectile(this.v.positionCanon(), 4);
+            System.out.println(this.projectile);
+        }
         System.out.println("Appui sur la touche espace");
     } 
 
     public EnsembleChaines getChaines(){
-        this.e=new EnsembleChaines();
-        System.out.println("hahahaha");
-        this.e.union(v.getEnsembleChaines());
-        return this.e;
+        EnsembleChaines e=new EnsembleChaines();
+        e.union(this.v.getEnsembleChaines());
+        if (this.projectile!=null){
+            e.union(this.projectile.getEnsembleChaines());
+        }
+        for (Alien a:this.lesAliens){e.union(a.getEnsembleChaines());}
+        return e;
     }
     public void jouerUnTour(){
-
+        if (projectile!=null){
+            if (this.projectile.getPosY()<this.hauteur){
+                this.projectile.evolue();
+            }
+            else{
+                this.projectile=null;
+            }
+        }
+        score.ajoute(1);
     }
 
 
