@@ -12,6 +12,11 @@ public class EnsembleChaines {
      */
     public EnsembleChaines(){chaines= new ArrayList<ChainePositionnee>(); }
 
+    public ArrayList<ChainePositionnee> getChaines() {
+        return chaines;
+    }
+    
+
     /**
      * cette methode permet d'ajouter une chaine 
      * @param x position x de la chaine

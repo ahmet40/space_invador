@@ -9,6 +9,8 @@ import javafx.scene.Group;
 import javafx.scene.text.Text;
 import javafx.scene.text.Font;
 import java.net.URL;
+import java.text.BreakIterator;
+
 import javax.swing.Action;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
@@ -32,7 +34,7 @@ import javafx.scene.layout.BackgroundImage;
 import javafx.scene.layout.BackgroundRepeat;
 import javafx.scene.layout.BackgroundPosition;
 import java.awt.Canvas;
-
+import javafx.scene.layout.BackgroundFill;
 
 public class Executable extends Application {
     private Pane root;
@@ -53,11 +55,22 @@ public class Executable extends Application {
     private void afficherCaracteres(){
         caracteres.getChildren().clear();
         int hauteur = (int) root.getHeight();
-        for( ChainePositionnee c : gestionnaire.getChaines().chaines)
+        
+        for(ChainePositionnee c : gestionnaire.getChaines().chaines)
         {
-            Text t = new Text (c.x*largeurCaractere,hauteur - c.y*hauteurTexte, c.c);
-            t.setFont(Font.font ("Monospaced", 10));
-            caracteres.getChildren().add(t);
+            if (c.isRouge) {
+                String texteEnRouge = c.getC();
+                Text t = new Text (c.x*largeurCaractere,hauteur - c.y*hauteurTexte, texteEnRouge);
+                t.setFill(Color.RED);
+                t.setFont(Font.font ("Monospaced", 10));
+                caracteres.getChildren().add(t);
+            }
+            else{
+                Text t = new Text (c.x*largeurCaractere,hauteur - c.y*hauteurTexte, c.c);
+                t.setFont(Font.font ("Monospaced", 10));
+                caracteres.getChildren().add(t);
+            }
+            
         }
     }
 
@@ -76,41 +89,14 @@ public class Executable extends Application {
                                 }
                             }
                             if (gestionnaire.perdu()){
-                                root =new AnchorPane();
-                                Text text=new Text("Vous venez de perdre");
-                
-                                text.setX((gestionnaire.getLargeur()/2)-10);
-                                text.setY(gestionnaire.getHauteur()/2+10);
-                                Stage primaryStage=new Stage();
-                                primaryStage.setTitle("IUTO Space Invader");
-                                root.getChildren().add(text);
-                                //root.setStyle("-fx-background-image: url"("./captures/space_fin.png"));
-                                Scene scene = new Scene(root,gestionnaire.getLargeur()*largeurCaractere,gestionnaire.getHauteur()*hauteurTexte);
-                                primaryStage.setScene(scene);
-                                primaryStage.setResizable(false);
-                                primaryStage.show();
-                                Image backgroundImage = new Image("./capture/space_fin.png");
-                                root.setStyle("-fx-background-color: red");
-                                // Créer un objet BackgroundSize avec la largeur et la hauteur de la scène
-                                //BackgroundSize backgroundSize = new BackgroundSize(BackgroundSize.AUTO, BackgroundSize.AUTO, false, false, true, false);
-                        
-                                // Créer un objet BackgroundImage avec l'image, sa répétition et sa position
-                                //BackgroundImage backgroundImg = new BackgroundImage(backgroundImage, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, backgroundSize);
-                        
-                                // Créer un objet Background avec l'image en arrière-plan
-                                //Background background = new Background(backgroundImg);
-                        
-                                // Créer un conteneur VBox avec une taille spécifique
-                                //VBox root = new VBox();
-                                //root.setPrefSize(600, 400);
-                        
-                                // Appliquer l'arrière-plan à la racine
-                                //root.setBackground(background);
-                                
-                                }
+                                quitte();      
+                                System.out.println("Vous avez perdu");                       
+                            }
                             else{
+                                
                                 gestionnaire.jouerUnTour();
                                 afficherCaracteres();
+                                System.out.println("on recommence");
                             }
                         }
                     }),
@@ -124,6 +110,7 @@ public class Executable extends Application {
 
     @Override
         public void start(Stage primaryStage) {
+            System.out.println("je suis la");
             primaryStage.setTitle("IUTO Space Invader");
             caracteres = new Group();
             root= new AnchorPane(caracteres);
@@ -132,6 +119,7 @@ public class Executable extends Application {
             hbButtons.setPadding(new Insets((gestionnaire.getHauteur()*10)/2,(gestionnaire.getLargeur()*10)/2-5,(gestionnaire.getHauteur()*10)/2,250));
 
             Button buttonJouer = new Button("Jouer");
+            //root.setBackground(new Background(new BackgroundFill(Color.RED, null, null)));
 
 
             buttonJouer.setOnAction(new ControlleurBoutonJouer(this));

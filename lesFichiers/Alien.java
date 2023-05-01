@@ -1,3 +1,8 @@
+import javafx.scene.layout.Background;
+import javafx.scene.paint.Color;
+import java.awt.Rectangle;
+import javafx.scene.shape.Circle;
+
 
 /**
  * class permetant d'avoir des aliennes dans le jeu
@@ -7,6 +12,7 @@ public class Alien {
     private double posY;
     private String deplacementDroiteGauche;
     private boolean dep;
+    private Color couleur;
 
     /**
      * permet de crée un alienne
@@ -18,6 +24,7 @@ public class Alien {
         this.posY=posY;
         this.deplacementDroiteGauche="droite";
         this.dep=false;
+        this.couleur=null;
     }
     
     /**
@@ -71,16 +78,19 @@ public class Alien {
     public EnsembleChaines getEnsembleChaines(){
         EnsembleChaines ch=new EnsembleChaines();
         ch.ajouteChaine((int)posX,(int)posY+4," ▄▄████▄▄ ");
-        ch.ajouteChaine((int)posX,(int)posY+3,"██████████");                        
+        ch.ajouteChaine((int)posX,(int)posY+3,"██████████");
         ch.ajouteChaine((int)posX,(int)posY+2,"██▄▄██▄▄██");
-        ch.ajouteChaine((int)posX,(int)posY+1," ▄▀▄▀▀▄▀▄ ");  
+        ch.ajouteChaine((int)posX,(int)posY+1," ▄▀ ▀▀ ▀▄ ");
         ch.ajouteChaine((int)posX,(int)posY  ,"▀        ▀");
+        for (ChainePositionnee c:ch.getChaines()){
+            c.setIsRouge(true);
+        }
         return ch;
     }
 
 
     /**
-     * permet de cree l'image de l'alienne lorsqu'elle va bouger
+     * permet de cree l'image de l'alienne lorsqu'elle va bouger 
      * @return un ensemble de chaine
      */
     public EnsembleChaines anime(){
@@ -90,6 +100,9 @@ public class Alien {
         ch.ajouteChaine((int)posX,(int)posY+2,"██▄▄██▄▄██");
         ch.ajouteChaine((int)posX,(int)posY+1," ▄▀ ▀▀ ▀▄ ");  
         ch.ajouteChaine((int)posX,(int)posY  ,"  ▀    ▀  ");
+        for (ChainePositionnee c:ch.getChaines()){
+            c.setIsRouge(true);
+        }
         return ch;
 
     }
@@ -151,7 +164,18 @@ public class Alien {
         return false;
 
     }
+    @Override
+    public String toString(){
+        String ch="";
+        EnsembleChaines e=getEnsembleChaines();
+        for (ChainePositionnee c:e.getChaines()){
+            ch+=c;
+        }
+        return ch;
+    }
+    public void setColor(Color c){this.couleur=c;}
+
+
 
 }
-
 

@@ -1,5 +1,8 @@
 import java.util.List;
 import javax.swing.plaf.synth.SynthToolTipUI;
+
+import javafx.scene.paint.Color;
+
 import java.util.ArrayList;
 import java.lang.Math;
 
@@ -18,6 +21,7 @@ public class GestionJeu{
     private int compteTours;
     private List<Projectile> lesProjectilesQuiTouche;
     private List<Alien> lesAliensTouche;
+    private boolean changercouleur;
 
     
     /**
@@ -46,6 +50,7 @@ public class GestionJeu{
         this.compteTours=0;
         this.lesAliensTouche=new ArrayList<>();
         this.lesProjectilesQuiTouche=new ArrayList<>();
+        this.changercouleur=false;
     }
 
 
@@ -57,6 +62,10 @@ public class GestionJeu{
         return hauteur;
     }
 
+    public boolean getChangerCouleur(){
+        return changercouleur;
+    }
+
 
     /**
      * permet de renvoyer la largeur
@@ -64,6 +73,10 @@ public class GestionJeu{
      */
     public int getLargeur() {
         return largeur;
+    }
+
+    public List<Alien> getLesAliens() {
+        return lesAliens;
     }
 
 
@@ -76,6 +89,7 @@ public class GestionJeu{
         }
         System.out.println("Appui sur la touche gauche");
     }
+
 
 
     /**
@@ -112,22 +126,34 @@ public class GestionJeu{
      */
     public EnsembleChaines getChaines(){
         EnsembleChaines e=new EnsembleChaines();
+
         if (!this.perdu()){
+            this.changercouleur=false;
             e.union(this.v.getEnsembleChaines());
             //for (Projectile p:this.lesProjectiles){
             //    e.union(p.getEnsembleChaines());
             //}
             if (this.projectile!=null){
+                this.changercouleur=false;
                 e.union(this.projectile.getEnsembleChaines());
             }
             if (lesAliens.size()!=0){
+                this.changercouleur=true;     
                 if (lesAliens.get(0).getDep()==false){
-                    for (Alien a:this.lesAliens){e.union(a.anime());}
+                    for (Alien a:this.lesAliens){
+                        e.union(a.anime());
+                        
+                    }
                 }
                 else{
-                    for (Alien a:this.lesAliens){e.union(a.getEnsembleChaines());}
+                    for (Alien a:this.lesAliens){
+                        e.union(a.getEnsembleChaines());
+                        
+                    }
+                    
                 }
-            }              
+            }
+            this.changercouleur=false;           
         }
         return e;
     }
