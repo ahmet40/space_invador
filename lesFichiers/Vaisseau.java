@@ -29,7 +29,7 @@ public class Vaisseau {
      * @return la postion en X du canon
      */
     public int positionCanon(){
-        return (int)posX+6;
+        return (int)posX+5;
     }
     /**
      * methode qui va representer notre vaisseau sous forme d'un ensemble de chaine
@@ -37,11 +37,14 @@ public class Vaisseau {
      */
     public EnsembleChaines getEnsembleChaines(){
         EnsembleChaines ch=new EnsembleChaines();
-        ch.ajouteChaine((int)posX,4,"      ▄      ");
-        ch.ajouteChaine((int)posX,3,"     ███     ");                        
-        ch.ajouteChaine((int)posX,2,"▄███████████▄" );
-        ch.ajouteChaine((int)posX,1,"▄███████████▄");  
-        ch.ajouteChaine((int)posX,0,"█████████████");
+        ch.ajouteChaine((int)posX,3,"    ▄    ");
+        ch.ajouteChaine((int)posX,2,"   ███   ");                        
+        ch.ajouteChaine((int)posX,1,"▄███████▄" );  
+        ch.ajouteChaine((int)posX,0,"█████████");
         return ch;
+    }
+
+    public boolean contient(int x,int y){
+        return this.getEnsembleChaines().contient(x, y);
     }
 }

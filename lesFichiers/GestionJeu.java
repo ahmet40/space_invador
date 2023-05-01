@@ -1,6 +1,7 @@
 import java.util.List;
 import java.util.ArrayList;
 import java.lang.Math;
+import java.util.Random;
 
 /**
  * permet de cree le gestionneur du jeu
@@ -10,13 +11,15 @@ public class GestionJeu{
     private int largeur;
     private int positionX=0;
     private Vaisseau v;
-    private Projectile projectile;
-    private List<Projectile> lesProjectiles;
+    private ProjectileVaisseau projectileVaisseau;
+   // private ProjectileAlien projectileAlien;
+    //private List<Projectile> lesProjectiles;
     private Score score;
     private List<Alien> lesAliens;
     private int compteTours;
     private List<Projectile> lesProjectilesQuiTouche;
     private List<Alien> lesAliensTouche;
+    private boolean vaisseauTouche;
     //private boolean changercouleur;
 
     
@@ -24,10 +27,12 @@ public class GestionJeu{
      * ceci est la methode qui va crée notre gestionnaire de jeu
      */
     public GestionJeu(){
-        this.lesProjectiles=new ArrayList<>();
+        //this.lesProjectiles=new ArrayList<>();
+        this.vaisseauTouche=false;
         this.hauteur=60;
         this.largeur=100;
-        this.projectile=null;
+        this.projectileVaisseau=null;
+        //this.projectileAlien=null;
         this.v=new Vaisseau(30);
         this.score=new Score();
         this.lesAliens=new ArrayList<>();
@@ -106,9 +111,9 @@ public class GestionJeu{
      * va renvoyer un message lorsque nous allons appuyer sur la touche espace
      */
     public void toucheEspace(){
-        if (projectile==null){
-            this.projectile=new Projectile(this.v.positionCanon(), 4);
-            System.out.println(this.projectile);
+        if (projectileVaisseau==null){
+            this.projectileVaisseau=new ProjectileVaisseau(this.v.positionCanon(), 4);
+            System.out.println(this.projectileVaisseau);
         }
         System.out.println("Appui sur la touche espace");
     } 
@@ -123,24 +128,25 @@ public class GestionJeu{
         if (!this.perdu()){
             e.ajouteChaine(10, getHauteur()-10, score.toString());
             e.union(this.v.getEnsembleChaines());
-            if (this.projectile!=null){
-                e.union(this.projectile.getEnsembleChaines());
+            if (this.projectileVaisseau!=null){
+                e.union(this.projectileVaisseau.getEnsembleChaines());
             }
             if (lesAliens.size()!=0){  
                 if (lesAliens.get(0).getDep()==false){
                     for (Alien a:this.lesAliens){
                         e.union(a.anime());
-                        
+                        if (a.getProjectileAlien()!=null){e.union(a.getProjectileAlien().getEnsembleChaines());}
                     }
                 }
                 else{
                     for (Alien a:this.lesAliens){
                         e.union(a.getEnsembleChaines());
-                        
+                        if (a.getProjectileAlien()!=null){e.union(a.getProjectileAlien().getEnsembleChaines());}
                     }
                     
                 }
-            }          
+            } 
+
         }
         return e;
     }
@@ -150,45 +156,75 @@ public class GestionJeu{
      * methode qui represente tous ce qui va se passer lors d'un tour dans le jeu
      */
     public void jouerUnTour(){
-        if (projectile!=null){
-            for (Alien a:this.lesAliens){
-                if(a.contient((int) Math.round(projectile.getPosX()), (int) Math.round(projectile.getPosY()))){
-                   // System.out.println("TOUCHE");
-                    this.lesAliensTouche.add(a);
-                    //projectile=null;
-                    
-                    this.lesProjectilesQuiTouche.add(projectile);
+        if (projectileVaisseau!=null){
+            if (lesAliens.size()>0){
+                for (Alien a:this.lesAliens){
+                    if(a.contient((int) Math.round(projectileVaisseau.getPosX()), (int) Math.round(projectileVaisseau.getPosY()))){
+                       // System.out.println("TOUCHE");
+                        this.lesAliensTouche.add(a);
+                        //projectileVaisseau=null;
+                        this.lesProjectilesQuiTouche.add(projectileVaisseau);
+                    }
                 }
             }
-            if (projectile!=null){
-                if (this.projectile.getPosY()<this.hauteur){
-                    this.projectile.evolue();
-                }
-                else{
-                    this.projectile=null;
-                }
+            
+            if (this.projectileVaisseau.getPosY()<this.hauteur){
+                this.projectileVaisseau.evolue();
+            }
+            else{
+                this.projectileVaisseau=null;
             }
         }
-        for (Alien a:this.lesAliens){
-            a.evolue();
-            if(this.compteTours % 10 == 0)
-            a.anime();
-            if (this.compteTours%20==0){a.changerDep();}
+        if (lesAliens.size()>0){
+            for (Alien a:this.lesAliens){
+                if (a.getProjectileAlien()!=null){
+                    if (a.getProjectileAlien()!=null){
+                        System.out.println("c'est moi");
+                        if (v.contient((int) Math.round(a.getProjectileAlien().getPosX()),(int) Math.round(a.getProjectileAlien().getPosY()))){vaisseauTouche=true;System.out.println("12345678");}
+                    } 
+                    if (a.getProjectileAlien().getPosY()>1){
+                        a.evolueProjectile();
+                    }
+                    else{
+                        a.setProjectileAlien();
+                    }
+                    if (projectileVaisseau!=null && a.getProjectileAlien()!=null){
+                        if (projectileVaisseau.contient((int) Math.round(a.getProjectileAlien().getPosX()),(int) Math.round(a.getProjectileAlien().getPosY()))){
+                            a.setProjectileAlien();
+                            projectileVaisseau=null;
+                        }
+
+                    }
+                }
+                a.evolue();
+                if(this.compteTours % 10 == 0){
+                    a.anime();
+                }
+
+                if (this.compteTours%20==0){a.changerDep();}
+            }
+            if(this.compteTours % 60 == 0){
+                Random r=new Random();
+                int monNum = r.nextInt(lesAliens.size());  //crée un random entre 0 et 9
+                lesAliens.get(monNum).tire();
+            }
+
+            if (this.compteTours==100){
+
+                for (Alien a:this.lesAliens){
+                    a.changerDeplacement();
+                    compteTours=0;
+                    a.setPosY(1);
+                }
+            }
         }
 
-        if (this.compteTours==100){
-            for (Alien a:this.lesAliens){
-                a.changerDeplacement();
-                compteTours=0;
-                a.setPosY(10);
-            }
-        }
-
+        //if (vaisseauTouche){perdu();}
         this.compteTours++;
         score.ajoute(1);
-        for (Alien a:this.lesAliensTouche){this.lesAliens.remove(a);}
+        if (lesAliens.size()>0){for (Alien a:this.lesAliensTouche){this.lesAliens.remove(a);}}
         for (Projectile p:this.lesProjectilesQuiTouche){
-            if (p.equals(this.projectile)){projectile=null;}
+            if (p.equals(this.projectileVaisseau)){projectileVaisseau=null;}
         }
         if(this.lesProjectilesQuiTouche.size()!=0){
             this.lesProjectilesQuiTouche=new ArrayList<>();
@@ -212,9 +248,10 @@ public class GestionJeu{
      * @return un boolean
      */
     public boolean perdu(){
+        if (vaisseauTouche){return true;}
         if (lesAliens.size()!=0){
             for (Alien a:this.lesAliens){
-                if ((int) Math.round(a.getPosY())<=5){return true;}
+                if ((int) Math.round(a.getPosY())<=4){return true;}
             }
         }
         return false;

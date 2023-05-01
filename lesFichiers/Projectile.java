@@ -20,7 +20,7 @@ public class Projectile {
      */
     public EnsembleChaines getEnsembleChaines(){
         EnsembleChaines ch=new EnsembleChaines();
-        ch.ajouteChaine((int)posX,(int)posY, "^");
+        ch.ajouteChaine((int)posX,(int)posY, "¤");
         return ch;
     }
     /**
@@ -37,11 +37,26 @@ public class Projectile {
     public double getPosY() {
         return posY;
     }
+
     /**
-     * permet de faire evolue le projectile vers les aliens
+     * permet de modifier la position y
+     * @param posY la nouvelle position
      */
-    public void evolue(){
-        this.posY+=0.2;
+    public void setPosY(double posY) {
+        this.posY = posY;
     }
+
+    public boolean contient(int x,int y){
+        return this.getEnsembleChaines().contient(x, y);
+    }
+
+
+
+    ///**
+    // * permet de faire evolue le projectile vers les aliens
+    // */
+    //public void evolue(){
+    //    this.posY+=0.2;
+    //}
 
 }

@@ -6,6 +6,7 @@ public class Alien {
     private double posY;
     private String deplacementDroiteGauche;
     private boolean dep;
+    private ProjectileAlien projectileAlien;
 
     /**
      * permet de crée un alienne
@@ -17,6 +18,8 @@ public class Alien {
         this.posY=posY;
         this.deplacementDroiteGauche="droite";
         this.dep=false;
+        this.projectileAlien=null;
+        
     }
     
     /**
@@ -27,7 +30,9 @@ public class Alien {
         return this.dep;
     }
 
-
+    public ProjectileAlien getProjectileAlien() {
+        return projectileAlien;
+    }
     /**
      * permet de changer la valeur de dep
      */
@@ -162,6 +167,26 @@ public class Alien {
 
     }
 
+    /**
+     * methode qui va nous permettre de postionner le canon d'ou le projectile va etre tirer
+     * @return la postion en X du canon
+     */
+    public int positionCanon(){
+        return (int)posX+5;
+    }
 
+    public void tire(){
+        this.projectileAlien=new ProjectileAlien(positionCanon(), posY+1);
+       //  this.projectileAlien.evolue();
+    }
+
+    public void evolueProjectile(){
+        this.projectileAlien.evolue();
+    }
+
+    public void setProjectileAlien() {
+        this.projectileAlien = null;
+    }
+    
 }
 
