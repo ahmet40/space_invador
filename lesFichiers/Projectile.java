@@ -30,9 +30,16 @@ public class Projectile {
     public double getPosX() {
         return posX;
     }
+    /**
+     * permet de renvoyer la position en y du projectile
+     * @return un double
+     */
     public double getPosY() {
         return posY;
     }
+    /**
+     * permet de faire evolue le projectile vers les aliens
+     */
     public void evolue(){
         this.posY+=0.2;
     }

@@ -47,8 +47,6 @@ public class EnsembleChaines {
             for (int i=0;i<c.getC().length();i++){
                 if ((int)Math.round(c.x+i)==x && (int) (Math.round(c.y))==y){return true;}
             }
-            //System.out.println((int)Math.round(c.y));
-            //if ((int)Math.round(c.x)==x && (int) (Math.round(c.y))==y){return true;}
         }
         return false;
     }

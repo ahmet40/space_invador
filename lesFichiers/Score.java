@@ -17,6 +17,7 @@ public class Score {
         this.score+=val;
     }
 
+
     /**
      * permet de renvoyer le score 
      * @return un entier representant le score
@@ -24,4 +25,13 @@ public class Score {
     public int getScore() {
         return score;
     }
+
+    @Override
+    /**
+     * cette methode permet de changer la façon dont notre score va s'afficher
+     */
+    public String toString(){
+        return "Score : "+score+"";
+    }
+
 }

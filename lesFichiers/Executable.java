@@ -8,33 +8,19 @@ import javafx.stage.Stage;
 import javafx.scene.Group;
 import javafx.scene.text.Text;
 import javafx.scene.text.Font;
-import java.net.URL;
-import java.text.BreakIterator;
-
-import javax.swing.Action;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
-import javafx.event.Event;
 import javafx.util.Duration;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.HBox;
-import javafx.event.EventHandler;
-import javafx.event.ActionEvent;
 import javafx.scene.control.Button;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.application.Platform;
-import javafx.scene.image.Image;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundSize;
-import javafx.scene.layout.BackgroundImage;
-import javafx.scene.layout.BackgroundRepeat;
-import javafx.scene.layout.BackgroundPosition;
-import java.awt.Canvas;
-import javafx.scene.layout.BackgroundFill;
+
 
 public class Executable extends Application {
     private Pane root;

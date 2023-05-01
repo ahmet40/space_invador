@@ -1,5 +1,3 @@
-import javafx.beans.property.BooleanProperty;
-
 /**
  * class permetant de positionner une chaine de charactere
  */

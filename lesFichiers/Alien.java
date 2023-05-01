@@ -1,9 +1,3 @@
-import javafx.scene.layout.Background;
-import javafx.scene.paint.Color;
-import java.awt.Rectangle;
-import javafx.scene.shape.Circle;
-
-
 /**
  * class permetant d'avoir des aliennes dans le jeu
  */
@@ -12,7 +6,6 @@ public class Alien {
     private double posY;
     private String deplacementDroiteGauche;
     private boolean dep;
-    private Color couleur;
 
     /**
      * permet de crée un alienne
@@ -24,7 +17,6 @@ public class Alien {
         this.posY=posY;
         this.deplacementDroiteGauche="droite";
         this.dep=false;
-        this.couleur=null;
     }
     
     /**
@@ -107,6 +99,10 @@ public class Alien {
 
     }
 
+    /**
+     * permet de changer la position y de l'alienne
+     * @param p un double qui represente la nouvelle position
+     */
     public void setPosY(double p){
         this.posY -= p;
 
@@ -137,7 +133,7 @@ public class Alien {
             //if (dep){dep=false;}
             //else{dep=true;}
         }
-        //posY-=0.01;
+
     }
 
     /**
@@ -149,6 +145,7 @@ public class Alien {
     public boolean contient(int x,int y){
         return this.getEnsembleChaines().contient(x, y);
     }
+
     @Override
     /**
      * cette methode va nous permettre de verifier si l'objet donner en parametre appartient à cette class et qu'il à une instance 
@@ -164,17 +161,6 @@ public class Alien {
         return false;
 
     }
-    @Override
-    public String toString(){
-        String ch="";
-        EnsembleChaines e=getEnsembleChaines();
-        for (ChainePositionnee c:e.getChaines()){
-            ch+=c;
-        }
-        return ch;
-    }
-    public void setColor(Color c){this.couleur=c;}
-
 
 
 }

@@ -1,8 +1,4 @@
 import java.util.List;
-import javax.swing.plaf.synth.SynthToolTipUI;
-
-import javafx.scene.paint.Color;
-
 import java.util.ArrayList;
 import java.lang.Math;
 
@@ -21,7 +17,7 @@ public class GestionJeu{
     private int compteTours;
     private List<Projectile> lesProjectilesQuiTouche;
     private List<Alien> lesAliensTouche;
-    private boolean changercouleur;
+    //private boolean changercouleur;
 
     
     /**
@@ -50,7 +46,7 @@ public class GestionJeu{
         this.compteTours=0;
         this.lesAliensTouche=new ArrayList<>();
         this.lesProjectilesQuiTouche=new ArrayList<>();
-        this.changercouleur=false;
+        //this.changercouleur=false;
     }
 
 
@@ -62,9 +58,7 @@ public class GestionJeu{
         return hauteur;
     }
 
-    public boolean getChangerCouleur(){
-        return changercouleur;
-    }
+
 
 
     /**
@@ -75,6 +69,11 @@ public class GestionJeu{
         return largeur;
     }
 
+
+    /**
+     * permet de renvoyer la liste (Arraylist) d'aliens
+     * @return la liste
+     */
     public List<Alien> getLesAliens() {
         return lesAliens;
     }
@@ -107,14 +106,9 @@ public class GestionJeu{
      * va renvoyer un message lorsque nous allons appuyer sur la touche espace
      */
     public void toucheEspace(){
-        //if (this.lesProjectiles.size()==0){
-        //    this.projectile=new Projectile(this.v.positionCanon(), 4);
-        //    lesProjectiles.add(this.projectile);
-        //}
         if (projectile==null){
             this.projectile=new Projectile(this.v.positionCanon(), 4);
             System.out.println(this.projectile);
-            //lesProjectiles.add(this.projectile);
         }
         System.out.println("Appui sur la touche espace");
     } 
@@ -126,19 +120,13 @@ public class GestionJeu{
      */
     public EnsembleChaines getChaines(){
         EnsembleChaines e=new EnsembleChaines();
-
         if (!this.perdu()){
-            this.changercouleur=false;
+            e.ajouteChaine(10, getHauteur()-10, score.toString());
             e.union(this.v.getEnsembleChaines());
-            //for (Projectile p:this.lesProjectiles){
-            //    e.union(p.getEnsembleChaines());
-            //}
             if (this.projectile!=null){
-                this.changercouleur=false;
                 e.union(this.projectile.getEnsembleChaines());
             }
-            if (lesAliens.size()!=0){
-                this.changercouleur=true;     
+            if (lesAliens.size()!=0){  
                 if (lesAliens.get(0).getDep()==false){
                     for (Alien a:this.lesAliens){
                         e.union(a.anime());
@@ -152,8 +140,7 @@ public class GestionJeu{
                     }
                     
                 }
-            }
-            this.changercouleur=false;           
+            }          
         }
         return e;
     }
