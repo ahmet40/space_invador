@@ -22,7 +22,7 @@ public class Projectile {
         EnsembleChaines ch=new EnsembleChaines();
         ch.ajouteChaine((int)posX,(int)posY, "¤");
         return ch;
-    }
+    };
     /**
      * methode qui va renvoyer la valeur de la position en X du projectile
      * @return
@@ -52,11 +52,11 @@ public class Projectile {
 
 
 
-    ///**
-    // * permet de faire evolue le projectile vers les aliens
-    // */
-    //public void evolue(){
-    //    this.posY+=0.2;
-    //}
+    /**
+     * permet de faire evolue le projectile vers les aliens
+     */
+    public void evolue(){
+        this.posY+=0.2;
+    };
 
 }

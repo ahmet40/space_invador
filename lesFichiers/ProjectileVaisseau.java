@@ -4,10 +4,16 @@ public class ProjectileVaisseau extends Projectile{
         super(x,y);
         this.evoluer=0.2;
     }
+
     public void evolue(){
-        double nouvelleposition=super.getPosY() +this.evoluer;
-        super.setPosY(nouvelleposition);
+        super.evolue();
     }
+    @Override
+    public EnsembleChaines getEnsembleChaines(){
+        EnsembleChaines ch=new EnsembleChaines();
+        ch.ajouteChaine((int)super.getPosX(),(int)super.getPosY(), "|");
+        return ch;
+    };
 
 
 }

@@ -11,6 +11,8 @@ import javafx.scene.text.Font;
 
 import java.util.ArrayList;
 
+import javax.security.auth.callback.TextInputCallback;
+
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -23,6 +25,7 @@ import javafx.scene.control.Button;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.application.Platform;
+import javax.swing.*;
 
 
 public class Executable extends Application {
@@ -78,28 +81,17 @@ public class Executable extends Application {
                     new EventHandler<ActionEvent>() {
                         @Override public void handle(ActionEvent actionEvent) {
                             if (gestionnaire.gagner()){
-                                EnsembleChaines e= new EnsembleChaines();
-                                e.ajouteChaine(gestionnaire.getLargeur(),gestionnaire.getHauteur(),"GAGNE");
-                                for(ChainePositionnee c : e.chaines){
-                                    Text t = new Text (c.x*largeurCaractere,gestionnaire.getHauteur() - c.y*hauteurTexte, c.c);
-                                    t.setFont(Font.font ("Monospaced", 10));
-                                    caracteres.getChildren().add(t);
-                                }
+                                JFrame j=new JFrame();
+                                JOptionPane.showMessageDialog(j,"Vous venez de gagnez, vous avez tué tous les aliens");
+                                System.exit(0);
                             }
                             if (gestionnaire.perdu()){
-                                System.out.println("Vous avez perdu");                   
-                                quitte();
-                                //Stage primaryStage = new Stage();
-                                //final Button button1 = new Button("Salut tout le monde !"); 
-                                //button1.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE); 
-                                //final Button button2 = new Button("Hello !"); 
-                                //final Pane root = new Pane(); 
-                                //root.getChildren().addAll(button1, button2); 
-                                //final Scene scene = new Scene(root, 350, 300); 
-                                //primaryStage.setTitle("Test de StackPane"); 
-                                //primaryStage.setScene(scene); 
-                                //primaryStage.show(); 
-                  //
+                                JFrame j=new JFrame();
+                                JOptionPane.showMessageDialog(j,"Vous venez de perdre, vous avez tué : " +(10-gestionnaire.getLesAliens().size())+" aliens");
+                                System.exit(0);
+                                
+
+
                                 
                             }
                             else{

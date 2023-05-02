@@ -38,19 +38,22 @@ public class GestionJeu{
         this.lesAliens=new ArrayList<>();
         for (int i=0;i<2;++i){
             int c=10;
-            for (int j=0;j<5;++j){
+            int j=0;
+            while (j<this.largeur/20){
                 if (i==0){this.lesAliens.add(new Alien(c, 30));
                         c+=15;}
                 else{
                     this.lesAliens.add(new Alien(c, 40));
                     c+=15;
                 }
+                ++j;
                 
             }
         }
         this.compteTours=0;
         this.lesAliensTouche=new ArrayList<>();
         this.lesProjectilesQuiTouche=new ArrayList<>();
+     
         //this.changercouleur=false;
     }
 
@@ -178,23 +181,23 @@ public class GestionJeu{
         if (lesAliens.size()>0){
             for (Alien a:this.lesAliens){
                 if (a.getProjectileAlien()!=null){
-                    if (a.getProjectileAlien()!=null){
-                        System.out.println("c'est moi");
-                        if (v.contient((int) Math.round(a.getProjectileAlien().getPosX()),(int) Math.round(a.getProjectileAlien().getPosY()))){vaisseauTouche=true;System.out.println("12345678");}
-                    } 
+                    
+                    //    System.out.println("c'est moi");
+                    if (v.contient((int) Math.round(a.getProjectileAlien().getPosX()),(int) Math.round(a.getProjectileAlien().getPosY()))){vaisseauTouche=true;System.out.println("12345678");}
+                     
                     if (a.getProjectileAlien().getPosY()>1){
                         a.evolueProjectile();
                     }
                     else{
                         a.setProjectileAlien();
                     }
-                    if (projectileVaisseau!=null && a.getProjectileAlien()!=null){
-                        if (projectileVaisseau.contient((int) Math.round(a.getProjectileAlien().getPosX()),(int) Math.round(a.getProjectileAlien().getPosY()))){
-                            a.setProjectileAlien();
-                            projectileVaisseau=null;
-                        }
-
-                    }
+                    //if (projectileVaisseau!=null && a.getProjectileAlien()!=null){
+                    //    if (projectileVaisseau.contient((int) Math.round(a.getProjectileAlien().getPosX()),(int) Math.round(a.getProjectileAlien().getPosY()))){
+                    //        a.setProjectileAlien();
+                    //        projectileVaisseau=null;
+                    //    }
+//
+                    //}
                 }
                 a.evolue();
                 if(this.compteTours % 10 == 0){

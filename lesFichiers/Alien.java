@@ -176,7 +176,10 @@ public class Alien {
     }
 
     public void tire(){
-        this.projectileAlien=new ProjectileAlien(positionCanon(), posY+1);
+        if (this.projectileAlien==null){
+            this.projectileAlien=new ProjectileAlien(positionCanon(), posY+1);
+        }
+        //this.projectileAlien=new ProjectileAlien(positionCanon(), posY+1);
        //  this.projectileAlien.evolue();
     }
 
