@@ -103,7 +103,7 @@ public class GestionJeu{
      * va renvoyer un message lorsque nous allons appuyer sur la touche droite
      */
     public void toucheDroite(){
-        if (this.v.getPosX()+4<this.largeur-16){
+        if (this.v.getPosX()+4<this.largeur-9){
             v.deplace(4);
         }
         System.out.println("Appui sur la touche droite");
@@ -160,56 +160,59 @@ public class GestionJeu{
      */
     public void jouerUnTour(){
         if (projectileVaisseau!=null){
-            if (lesAliens.size()>0){
-                for (Alien a:this.lesAliens){
-                    if(a.contient((int) Math.round(projectileVaisseau.getPosX()), (int) Math.round(projectileVaisseau.getPosY()))){
-                       // System.out.println("TOUCHE");
-                        this.lesAliensTouche.add(a);
-                        //projectileVaisseau=null;
-                        this.lesProjectilesQuiTouche.add(projectileVaisseau);
-                    }
-                }
-            }
-            
-            if (this.projectileVaisseau.getPosY()<this.hauteur){
-                this.projectileVaisseau.evolue();
+            if (this.projectileVaisseau.getPosY()<this.hauteur){        // on regarde si la position y du projectil est inferieur à la longueur de la fenetre
+                this.projectileVaisseau.evolue();                       // on va faire evoluer le projectile sur la meme position x
             }
             else{
-                this.projectileVaisseau=null;
+                this.projectileVaisseau=null;                           // on remet le projectile à null si il à atteint le haut de la fenetre
             }
+            if (lesAliens.size()>0){                                    // si il y a toujours des aliens
+                for (Alien a:this.lesAliens){         
+                    if (projectileVaisseau !=null){   
+                        // on reverife que le projectile est different de null car 4 ligne avant on le remet à null, et cela fait que nous devons reverifie
+                        if(a.contient((int) Math.round(projectileVaisseau.getPosX()), (int) Math.round(projectileVaisseau.getPosY()))){
+                            // si l'allien se fait touche par le projectil
+
+                            this.lesAliensTouche.add(a);        // on ajoute l'alien à la liste pour le supprimer plus tard dans la methode
+                            //projectileVaisseau=null;            // comme le projectile à touché l'alien on le remet à null pour qu'il disparaissent et pour qu'on puisse retirer.
+                            this.lesProjectilesQuiTouche.add(projectileVaisseau);   //on ajoute
+                        }
+                    }
+                }   
+            }
+            
         }
-        if (lesAliens.size()>0){
-            for (Alien a:this.lesAliens){
-                if (a.getProjectileAlien()!=null){
+        if (lesAliens.size()>0){                              // si il y à des aliens
+            for (Alien a:this.lesAliens){                    // pour chaque alien
+                if (a.getProjectileAlien()!=null){          //si le projectille de l'alien est different de null(si il a tirer)
                     
-                    //    System.out.println("c'est moi");
-                    if (v.contient((int) Math.round(a.getProjectileAlien().getPosX()),(int) Math.round(a.getProjectileAlien().getPosY()))){vaisseauTouche=true;System.out.println("12345678");}
-                     
-                    if (a.getProjectileAlien().getPosY()>1){
-                        a.evolueProjectile();
+                    if (v.contient((int) Math.round(a.getProjectileAlien().getPosX()),(int) Math.round(a.getProjectileAlien().getPosY()))){vaisseauTouche=true;}
+                     // si le tire de l'alienne touche le vaisseau on met le boolean vaisseauTouche à vrai
+                    
+                     if (a.getProjectileAlien().getPosY()>1){       //si la position y du projectile de l'alien ne depasse pas 1
+                        a.evolueProjectile();                       //on le fait evoluer
                     }
-                    else{
-                        a.setProjectileAlien();
+                    else{                                            //sinon
+                        a.setProjectileAlien();                     //on le remet à null
                     }
-                    //if (projectileVaisseau!=null && a.getProjectileAlien()!=null){
-                    //    if (projectileVaisseau.contient((int) Math.round(a.getProjectileAlien().getPosX()),(int) Math.round(a.getProjectileAlien().getPosY()))){
-                    //        a.setProjectileAlien();
-                    //        projectileVaisseau=null;
-                    //    }
-//
-                    //}
+                    if (projectileVaisseau!=null && a.getProjectileAlien()!=null){
+                        if (projectileVaisseau.contient((int) Math.round(a.getProjectileAlien().getPosX()),(int) Math.round(a.getProjectileAlien().getPosY()))){
+                            a.setProjectileAlien();
+                            projectileVaisseau=null;
+                        }
+                    }
                 }
-                a.evolue();
-                if(this.compteTours % 10 == 0){
-                    a.anime();
+                a.evolue();                                 // les projectile ont été gere maintenant on fait evoluer l'alienne (il se deplace)
+                if(this.compteTours % 10 == 0){             // tout les 10 tour de jeu
+                    a.anime();                              //l'alien change d'animation
                 }
 
-                if (this.compteTours%20==0){a.changerDep();}
+                if (this.compteTours%20==0){a.changerDep();}    //tout les 20 tours de jeu on fait changer le deplacement(on change l'animation) de l'alien
             }
-            if(this.compteTours % 60 == 0){
-                Random r=new Random();
-                int monNum = r.nextInt(lesAliens.size());  //crée un random entre 0 et 9
-                lesAliens.get(monNum).tire();
+            if(this.compteTours % 60 == 0){                     //tout les 60 tours de jeu
+                Random r=new Random();                              
+                int monNum = r.nextInt(lesAliens.size());  //crée un random entre 0 et la taille de la liste d'alien
+                lesAliens.get(monNum).tire();              // grace à ce random on choisit l'alien qui va tirer
             }
 
             if (this.compteTours==100){
@@ -225,14 +228,19 @@ public class GestionJeu{
         //if (vaisseauTouche){perdu();}
         this.compteTours++;
         score.ajoute(1);
-        if (lesAliens.size()>0){for (Alien a:this.lesAliensTouche){this.lesAliens.remove(a);}}
-        for (Projectile p:this.lesProjectilesQuiTouche){
+        if (lesAliens.size()>0){                    
+            for (Alien a:this.lesAliensTouche){     // pour chaque alien touche
+                this.lesAliens.remove(a);           // on l'enleve de la liste
+            }
+        }
+        lesAliensTouche=new ArrayList<>();
+        for (Projectile p:this.lesProjectilesQuiTouche){            //
             if (p.equals(this.projectileVaisseau)){projectileVaisseau=null;}
         }
-        if(this.lesProjectilesQuiTouche.size()!=0){
+        if(this.lesProjectilesQuiTouche.size()!=0){ 
             this.lesProjectilesQuiTouche=new ArrayList<>();
         }
-        System.out.println((int)Math.round(lesAliens.get(0).getPosY()));
+        //System.out.println((int)Math.round(lesAliens.get(0).getPosY()));
     }   
 
 

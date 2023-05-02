@@ -101,9 +101,9 @@ public class Alien {
             c.setIsRouge(true);
         }
         return ch;
-
     }
 
+    
     /**
      * permet de changer la position y de l'alienne
      * @param p un double qui represente la nouvelle position

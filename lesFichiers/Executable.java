@@ -52,11 +52,11 @@ public class Executable extends Application {
         
         for(ChainePositionnee c : gestionnaire.getChaines().chaines)
         {
-            if (c.isRouge){
+            if (c.isRouge){                                 // si le boolean de la chaine est à true
 
-                    String texteEnRouge = c.getC();
-                    Text t = new Text (c.x*largeurCaractere,hauteur - c.y*hauteurTexte, texteEnRouge);
-                    t.setFill(Color.RED);
+                    String texteEnRouge = c.getC();             // on prend la chaine
+                    Text t = new Text (c.x*largeurCaractere,hauteur - c.y*hauteurTexte, texteEnRouge);      // on met la chaine dans le texte 
+                    t.setFill(Color.RED);                                                                   // on change la couleur 
                     t.setFont(Font.font ("Monospaced", 10));
                     caracteres.getChildren().add(t);
     
@@ -87,12 +87,13 @@ public class Executable extends Application {
                             }
                             if (gestionnaire.perdu()){
                                 JFrame j=new JFrame();
-                                JOptionPane.showMessageDialog(j,"Vous venez de perdre, vous avez tué : " +(10-gestionnaire.getLesAliens().size())+" aliens");
+                                if (gestionnaire.getLesAliens().size()==0){
+                                    JOptionPane.showMessageDialog(j,"Vous venez de perdre, vous avez tué : " +(10-gestionnaire.getLesAliens().size())+" alien");
+                                }
+                                else{
+                                    JOptionPane.showMessageDialog(j,"Vous venez de perdre, vous avez tué : " +(10-gestionnaire.getLesAliens().size())+" aliens");
+                                }
                                 System.exit(0);
-                                
-
-
-                                
                             }
                             else{
                                 
@@ -116,15 +117,15 @@ public class Executable extends Application {
             caracteres = new Group();
             root= new AnchorPane(caracteres);
             gestionnaire = new GestionJeu();
-            HBox hbButtons = new HBox(3);
+            HBox hbButtons = new HBox(3);               // on crée une hBox
             hbButtons.setPadding(new Insets((gestionnaire.getHauteur()*10)/2,(gestionnaire.getLargeur()*10)/2-5,(gestionnaire.getHauteur()*10)/2,250));
 
-            Button buttonJouer = new Button("Jouer");
+            Button buttonJouer = new Button("Jouer");       // on crée un boutton
             
-            buttonJouer.setOnAction(new ControlleurBoutonJouer(this));
-            hbButtons.getChildren().addAll(buttonJouer);
-            hbButtons.setAlignment(Pos.CENTER);
-            root.getChildren().add(hbButtons);
+            buttonJouer.setOnAction(new ControlleurBoutonJouer(this));      // on met un controlleur au boutton
+            hbButtons.getChildren().addAll(buttonJouer);            // on ajoute ce boutton a la hbox
+            hbButtons.setAlignment(Pos.CENTER);                     // on place la hbox au centre de la fenetre
+            root.getChildren().add(hbButtons);                      // on met dans le root (AnchorPane) la hBox
 
             Text t=new Text("█");
             t.setFont(Font.font("Monospaced",10));
@@ -142,8 +143,6 @@ public class Executable extends Application {
             });
             primaryStage.setScene(scene);
             primaryStage.setResizable(false);
-            
             primaryStage.show();
-            //lancerAnimation();
         }
 }
