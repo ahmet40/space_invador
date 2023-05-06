@@ -2,7 +2,7 @@
 /**
  * Cette class permet de representer un projectile
  */
-public class Projectile {
+public abstract class Projectile {
     private double posX;
     private double posY;
     /**
@@ -15,15 +15,10 @@ public class Projectile {
         this.posY=y;
     }
     /**
-     * cette methode permet de reresenter le projectile sous forme d'un ensemble de chaine
+     * cette methode permet de reresenter le projectile sous forme d'un ensemble de chaine. Elle sera codé les class fille
      * @return ensemble de chaine
      */
-    public EnsembleChaines getEnsembleChaines(){
-        EnsembleChaines ch=new EnsembleChaines();
-        ch.ajouteChaine((int)posX,(int)posY, "¤");
-        for (ChainePositionnee c:ch.getChaines()){c.setIsWhite(true);}
-        return ch;
-    };
+    public abstract EnsembleChaines getEnsembleChaines();
     /**
      * methode qui va renvoyer la valeur de la position en X du projectile
      * @return

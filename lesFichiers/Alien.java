@@ -6,7 +6,7 @@ public abstract class Alien {
     private double posY;
     private String deplacementDroiteGauche;
     private boolean dep;
-    private ProjectileAlien projectileAlien;
+    //private Projectile projectileAlien;
 
     /**
      * permet de crée un alienne
@@ -18,7 +18,7 @@ public abstract class Alien {
         this.posY=posY;
         this.deplacementDroiteGauche="droite";
         this.dep=false;
-        this.projectileAlien=null;
+        //this.projectileAlien=null;
         
     }
     
@@ -30,9 +30,13 @@ public abstract class Alien {
         return this.dep;
     }
 
-    public ProjectileAlien getProjectileAlien() {
-        return projectileAlien;
-    }
+    /**
+     * va renvoyer le prejectil de l'alien. Toutes les methodes avec abstract seront coder dans les heritiers.
+     * @return le projectile
+     */
+    public abstract Projectile getProjectileAlien();
+
+
     /**
      * permet de changer la valeur de dep
      */
@@ -60,7 +64,7 @@ public abstract class Alien {
 
 
     /**
-     * permet de deplacer le vaisseau de x position
+     * permet de deplacer l'alien de x position
      * @param dx le nombre de x qui va se deplacer
      */ 
     public void deplace(double dx){
@@ -69,13 +73,13 @@ public abstract class Alien {
 
 
     /**
-     * permet de cree l'image de l'alienne. Cette methode sera codé pour chaque heritié de la class.
+     * permet de cree l'image de l'alien. Cette methode sera codé pour chaque heritié de la class.
      * @return un ensemble de chaine contenant l'image de notre alienne
      */
     public abstract EnsembleChaines getEnsembleChaines();
 
     /**
-     * permet de cree l'image de l'alienne lorsqu'elle va bouger. Cette methode sera codé pour chaque heritié de la class.
+     * permet de cree l'image de l'alien lorsqu'elle va bouger. Cette methode sera codé pour chaque heritié de la class.
      * @return un ensemble de chaine
      */
     public abstract EnsembleChaines anime();
@@ -98,7 +102,7 @@ public abstract class Alien {
     }
 
     /**
-     * Cette methode va permettre à l'alienne de ce deplacer vers la droite durant 100 tours puis descendre de 1 et se deplacer à gauche durant 100 tours
+     * Cette methode va permettre à l'alien de ce deplacer vers la droite durant 100 tours puis descendre de 1 et se deplacer à gauche durant 100 tours
      */
     public void evolue(){
 
@@ -118,7 +122,7 @@ public abstract class Alien {
     }
 
     /**
-     * cette methode permet de verifier si la position x,y d'un objet touche l'alienne
+     * cette methode permet de verifier si la position x,y d'un objet touche l'alien
      * @param x un entier representant la position x
      * @param y un entier representant la position y
      * @return un boolean indiquant si l'objet touche notre alienne
@@ -151,21 +155,20 @@ public abstract class Alien {
         return (int)posX+5;
     }
 
-    public void tire(){
-        if (this.projectileAlien==null){
-            this.projectileAlien=new ProjectileAlien(positionCanon(), posY+1);
-        }
-        //this.projectileAlien=new ProjectileAlien(positionCanon(), posY+1);
-       //  this.projectileAlien.evolue();
-    }
+    /**
+     * va faire tirer le projectile
+     */
+    public abstract void tire();
 
-    public void evolueProjectile(){
-        this.projectileAlien.evolue();
-    }
+    /**
+     * va faire evoluer le projectile
+     */
+    public abstract void evolueProjectile();
 
-    public void setProjectileAlien() {
-        this.projectileAlien = null;
-    }
+    /**
+     * permet de changer l'etat du projectile ( le faire passer à null)
+     */
+    public abstract void setProjectileAlien();
     
 }
 

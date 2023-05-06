@@ -7,14 +7,14 @@ public class ChainePositionnee{
     Boolean isRouge;
     Boolean isWhite;
     Boolean isGreen;
-
+    Boolean isBlue;
     /**
      * permet de construire la chaine à potionner au coordonnee a,b
      * @param a un entier representant la position x
      * @param b un entier representant la position y
      * @param d une chaine de charactere representant la chaine
      */
-    public ChainePositionnee(int a,int b, String d){x=a; y=b; c=d;isRouge=false;isWhite=false;isGreen=false;}
+    public ChainePositionnee(int a,int b, String d){x=a; y=b; c=d;isRouge=false;isWhite=false;isGreen=false;isBlue=false;}
     /**
      * permet de renvoyer le string 
      * @return la chaine de charactere
@@ -65,10 +65,26 @@ public class ChainePositionnee{
 
     /**
      * Permet de changer la valeur du boolean isGreen
-     * @param isWGreen  la nouvelle valeur du boolean
+     * @param isGreen  la nouvelle valeur du boolean
      */
     public void setIsGreen(Boolean isGreen) {
         this.isGreen = isGreen;
+    }
+
+    /**
+     * Permet de changer la valeur du boolean isGreen
+     * @return le boolean
+     */
+    public Boolean getIsBlue() {
+        return isBlue;
+    }
+
+        /**
+     * Permet de changer la valeur du boolean isBlue
+     * @param isBlue la nouvelle valeur du boolean
+     */
+    public void setIsBlue(Boolean isBlue) {
+        this.isBlue = isBlue;
     }
 
 }

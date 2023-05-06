@@ -3,8 +3,6 @@ import java.util.ArrayList;
 import java.lang.Math;
 import java.util.Random;
 
-import javafx.scene.control.Alert.AlertType;
-
 /**
  * permet de cree le gestionneur du jeu
  */
@@ -24,25 +22,26 @@ public class GestionJeu{
      * ceci est la methode qui va crée notre gestionnaire de jeu
      */
     public GestionJeu(){
-        this.hauteur=60;
-        this.largeur=100;
-        this.projectileVaisseau=null;
-        this.v=new Vaisseau(30);
-        this.vieMaxVaisseau=v.getLaVie().getVie();
-        this.score=new Score();
-        this.lesAliens=new ArrayList<>();
-        for (int i=0;i<2;++i){
-            int c=10;
-            int j=0;
-            while (j<this.largeur/20){
-                if (i==0){this.lesAliens.add(new AlienTypeUn(c, 30));
-                        c+=15;}
-                else{
-                    this.lesAliens.add(new AlienTypeDeux(c, 40));
-                    c+=15;
+        this.hauteur=60;                                                            // on va crée un jeu de hauteur 60
+        this.largeur=120;                                                           // de largeur 120
+        this.projectileVaisseau=null;                                               // on initialise le projectile du vaisseau à null
+        this.v=new Vaisseau((this.largeur/2)-4);                                    // on place notre vaisseau au centre du jeu
+        this.vieMaxVaisseau=v.getLaVie().getVie();                                  // on crée le maximum de la vie de notre vaisseau
+        this.score=new Score();                                                     // on crée le score
+        this.lesAliens=new ArrayList<>();                       //création de la liste d'alien
+        for (int i=0;i<4;++i){                                  // on va crée 4 lignes d'alien
+            int positionXdesAliens=5;
+            while (positionXdesAliens<this.largeur-20){
+                if (i==0){this.lesAliens.add(new AlienTypeUn(positionXdesAliens, this.hauteur/2));
+                    positionXdesAliens+=15;}
+                else if (i==2 || i==1){
+                    this.lesAliens.add(new AlienTypeDeux(positionXdesAliens, (this.hauteur/2)+7*i));
+                    positionXdesAliens+=15;
                 }
-                ++j;
-                
+                else{
+                    this.lesAliens.add(new AlienTypeTrois(positionXdesAliens, (this.hauteur/2)+7*i));
+                    positionXdesAliens+=15;
+                }
             }
         }
         this.compteTours=0;

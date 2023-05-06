@@ -3,12 +3,19 @@
  * Permet de construire un alien de type 1 qui va heriter de la class Alien.
  */
 public class AlienTypeUn extends Alien{
+    private ProjectileAlienTypeUn projectile;
     /**
      * Permet de construire un alien de type 1 avec le constructeur de la class mere (Alien)
      * @param posX la position x de l'alien
      * @param posY la position y de l'alien
      */
-    public AlienTypeUn(double posX,double posY){super(posX,posY);}
+    public AlienTypeUn(double posX,double posY){super(posX,posY);projectile=null;}
+    
+    
+    @Override
+    public Projectile getProjectileAlien() {
+        return projectile;
+    }
 
     @Override
         /**
@@ -24,7 +31,7 @@ public class AlienTypeUn extends Alien{
         ch.ajouteChaine((int)this.getPosX(),(int)this.getPosY()+1,"  ▄▀▄▄▀▄  ");
         ch.ajouteChaine((int)this.getPosX(),(int)this.getPosY()  ," ▀ ▀  ▀ ▀ ");
         for (ChainePositionnee c:ch.getChaines()){
-            c.setIsRouge(true);
+            c.setIsGreen(true);
         }
         return ch;
     }
@@ -44,9 +51,36 @@ public class AlienTypeUn extends Alien{
         ch.ajouteChaine((int)this.getPosX(),(int)this.getPosY()+1,"  ▄▀  ▀▄  ");  
         ch.ajouteChaine((int)this.getPosX(),(int)this.getPosY()  ,"   ▀  ▀   ");
         for (ChainePositionnee c:ch.getChaines()){
-            c.setIsRouge(true);
+            c.setIsGreen(true);
         }
         return ch;
     }
 
+    @Override
+    /**
+     * Cette methode fait tirer l'alien
+     */
+    public  void tire(){
+        if (this.projectile==null){
+            this.projectile=new ProjectileAlienTypeUn(positionCanon(), this.getPosY()+1);
+        }
+        //this.projectileAlien=new ProjectileAlien(positionCanon(), posY+1);
+       //  this.projectileAlien.evolue();
+    }
+
+    @Override
+    /**
+     * methode qui va faire evoluer le projectile
+     */
+    public  void evolueProjectile(){
+        this.projectile.evolue();
+    }
+
+    @Override
+    /**
+     * methode qui va changer l'etat du projectile
+     */
+    public  void setProjectileAlien() {
+        this.projectile = null;
+    }
 }

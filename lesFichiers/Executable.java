@@ -62,38 +62,17 @@ public class Executable extends Application {
         caracteres.getChildren().clear();
         int hauteur = (int) root.getHeight();
         
-        for(ChainePositionnee c : gestionnaire.getChaines().chaines)
-        {
-            if (c.isRouge){                                 // si le boolean de la chaine est à true
-
-                    String texteEnRouge = c.getC();             // on prend la chaine
-                    Text t = new Text (c.x*largeurCaractere,hauteur - c.y*hauteurTexte, texteEnRouge);      // on met la chaine dans le texte 
-                    t.setFill(Color.PURPLE);                                                                   // on change la couleur 
-                    t.setFont(Font.font ("Monospaced", 10));
-                    caracteres.getChildren().add(t);
-
+        for(ChainePositionnee c : gestionnaire.getChaines().chaines){
+            String texteEnRouge = c.getC();                                                         // on prend la chaine
+            Text t = new Text (c.x*largeurCaractere,hauteur - c.y*hauteurTexte, texteEnRouge);      // on met la chaine dans le texte 
+            if (c.isRouge){                                                                         // si le boolean de la chaine est à true
+                t.setFill(Color.PURPLE);                                                            // on change la couleur
             }
-            else if (c.getIsWhite()){
-
-                String texteEnRouge = c.getC();             // on prend la chaine
-                Text t = new Text (c.x*largeurCaractere,hauteur - c.y*hauteurTexte, texteEnRouge);      // on met la chaine dans le texte 
-                t.setFill(Color.WHITE);                                                                   // on change la couleur 
-                t.setFont(Font.font ("Monospaced", 10));
-                caracteres.getChildren().add(t);
-            }
-            else if (c.getIsGreen()){
-
-                String texteEnRouge = c.getC();             // on prend la chaine
-                Text t = new Text (c.x*largeurCaractere,hauteur - c.y*hauteurTexte, texteEnRouge);      // on met la chaine dans le texte 
-                t.setFill(Color.BLUE);                                                                   // on change la couleur 
-                t.setFont(Font.font ("Monospaced", 10));
-                caracteres.getChildren().add(t);
-            }
-            else{
-                Text t = new Text (c.x*largeurCaractere,hauteur - c.y*hauteurTexte, c.c);
-                t.setFont(Font.font ("Monospaced", 10));
-                caracteres.getChildren().add(t);
-            }
+            else if (c.getIsWhite()){t.setFill(Color.WHITE);}
+            else if (c.getIsGreen()){t.setFill(Color.LIGHTGREEN);}
+            else if (c.getIsBlue()){t.setFill(Color.CYAN);}
+            t.setFont(Font.font ("Monospaced", 10));
+            caracteres.getChildren().add(t);
             
         }
     }
