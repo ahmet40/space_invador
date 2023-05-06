@@ -202,7 +202,6 @@ public class Executable extends Application {
             primaryStage.show();
         }
         public HBox fin(){
-        
            HBox hbButtons = new HBox(3);               // on crée une hBox
            hbButtons.setPadding(new Insets((gestionnaire.getHauteur()*10)/2,(gestionnaire.getLargeur()*10)/2-5,(gestionnaire.getHauteur()*10)/2,250));
            this.rejouer= new Button("reJouer");       // on crée un boutton

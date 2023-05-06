@@ -3,6 +3,8 @@ import java.util.ArrayList;
 import java.lang.Math;
 import java.util.Random;
 
+import javafx.scene.control.Alert.AlertType;
+
 /**
  * permet de cree le gestionneur du jeu
  */
@@ -33,10 +35,10 @@ public class GestionJeu{
             int c=10;
             int j=0;
             while (j<this.largeur/20){
-                if (i==0){this.lesAliens.add(new Alien(c, 30));
+                if (i==0){this.lesAliens.add(new AlienTypeUn(c, 30));
                         c+=15;}
                 else{
-                    this.lesAliens.add(new Alien(c, 40));
+                    this.lesAliens.add(new AlienTypeDeux(c, 40));
                     c+=15;
                 }
                 ++j;

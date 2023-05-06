@@ -1,7 +1,7 @@
 /**
  * class permetant d'avoir des aliennes dans le jeu
  */
-public class Alien {
+public abstract class Alien {
     private double posX;
     private double posY;
     private String deplacementDroiteGauche;
@@ -69,40 +69,16 @@ public class Alien {
 
 
     /**
-     * permet de cree l'image de l'alienne
+     * permet de cree l'image de l'alienne. Cette methode sera codé pour chaque heritié de la class.
      * @return un ensemble de chaine contenant l'image de notre alienne
      */
-    public EnsembleChaines getEnsembleChaines(){
-        EnsembleChaines ch=new EnsembleChaines();
-        ch.ajouteChaine((int)posX,(int)posY+4," ▄▄████▄▄ ");
-        ch.ajouteChaine((int)posX,(int)posY+3,"██████████");
-        ch.ajouteChaine((int)posX,(int)posY+2,"██▄▄██▄▄██");
-        ch.ajouteChaine((int)posX,(int)posY+1," ▄▀ ▀▀ ▀▄ ");
-        ch.ajouteChaine((int)posX,(int)posY  ,"▀        ▀");
-        for (ChainePositionnee c:ch.getChaines()){
-            c.setIsRouge(true);
-        }
-        return ch;
-    }
-
+    public abstract EnsembleChaines getEnsembleChaines();
 
     /**
-     * permet de cree l'image de l'alienne lorsqu'elle va bouger 
+     * permet de cree l'image de l'alienne lorsqu'elle va bouger. Cette methode sera codé pour chaque heritié de la class.
      * @return un ensemble de chaine
      */
-    public EnsembleChaines anime(){
-        EnsembleChaines ch=new EnsembleChaines();
-        ch.ajouteChaine((int)posX,(int)posY+4," ▄▄████▄▄ ");
-        ch.ajouteChaine((int)posX,(int)posY+3,"██████████");                        
-        ch.ajouteChaine((int)posX,(int)posY+2,"██▄▄██▄▄██");
-        ch.ajouteChaine((int)posX,(int)posY+1," ▄▀ ▀▀ ▀▄ ");  
-        ch.ajouteChaine((int)posX,(int)posY  ,"  ▀    ▀  ");
-        for (ChainePositionnee c:ch.getChaines()){
-            c.setIsRouge(true);
-        }
-        return ch;
-    }
-
+    public abstract EnsembleChaines anime();
     
     /**
      * permet de changer la position y de l'alienne
