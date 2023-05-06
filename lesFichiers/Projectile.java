@@ -21,6 +21,7 @@ public class Projectile {
     public EnsembleChaines getEnsembleChaines(){
         EnsembleChaines ch=new EnsembleChaines();
         ch.ajouteChaine((int)posX,(int)posY, "¤");
+        for (ChainePositionnee c:ch.getChaines()){c.setIsWhite(true);}
         return ch;
     };
     /**

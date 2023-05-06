@@ -12,6 +12,10 @@ public class EnsembleChaines {
      */
     public EnsembleChaines(){chaines= new ArrayList<ChainePositionnee>(); }
 
+    /**
+     * permet de retourner la liste de chaine
+     * @return une ArrayList contenant les chaines.
+     */
     public ArrayList<ChainePositionnee> getChaines() {
         return chaines;
     }
@@ -43,9 +47,10 @@ public class EnsembleChaines {
      * @return un boolean 
      */
     public boolean contient(int x,int y){
-        for (ChainePositionnee c:chaines){
-            for (int i=0;i<c.getC().length();i++){
-                if ((int)Math.round(c.x+i)==x && (int) (Math.round(c.y))==y){return true;}
+        for (ChainePositionnee c:chaines){                                                  // parcours par chaine de notre liste
+            for (int i=0;i<c.getC().length();i++){                                      // pour chaque i <  à la longueur de la chaine 
+                if ((int)Math.round(c.x+i)==x && (int) (Math.round(c.y))==y){return true;}  
+                // on arrondi la position x et y de la chaine et on regarde si c'est egale au position x,y donnée en paraùetre 
             }
         }
         return false;

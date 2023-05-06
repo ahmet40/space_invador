@@ -9,31 +9,24 @@ import java.util.Random;
 public class GestionJeu{
     private int hauteur;
     private int largeur;
-    private int positionX=0;
     private Vaisseau v;
     private ProjectileVaisseau projectileVaisseau;
-   // private ProjectileAlien projectileAlien;
-    //private List<Projectile> lesProjectiles;
     private Score score;
     private List<Alien> lesAliens;
     private int compteTours;
-    private List<Projectile> lesProjectilesQuiTouche;
     private List<Alien> lesAliensTouche;
-    private boolean vaisseauTouche;
-    //private boolean changercouleur;
+    private int vieMaxVaisseau;
 
-    
+    private int nombreToursSansImage;
     /**
      * ceci est la methode qui va crée notre gestionnaire de jeu
      */
     public GestionJeu(){
-        //this.lesProjectiles=new ArrayList<>();
-        this.vaisseauTouche=false;
         this.hauteur=60;
         this.largeur=100;
         this.projectileVaisseau=null;
-        //this.projectileAlien=null;
         this.v=new Vaisseau(30);
+        this.vieMaxVaisseau=v.getLaVie().getVie();
         this.score=new Score();
         this.lesAliens=new ArrayList<>();
         for (int i=0;i<2;++i){
@@ -52,9 +45,7 @@ public class GestionJeu{
         }
         this.compteTours=0;
         this.lesAliensTouche=new ArrayList<>();
-        this.lesProjectilesQuiTouche=new ArrayList<>();
-     
-        //this.changercouleur=false;
+        this.nombreToursSansImage=50;
     }
 
 
@@ -64,6 +55,14 @@ public class GestionJeu{
      */
     public int getHauteur() {
         return hauteur;
+    }
+
+    /**
+     * permet de retourner le score 
+     * @return Score le score
+     */
+    public Score getScore() {
+        return score;
     }
 
 
@@ -85,10 +84,11 @@ public class GestionJeu{
     public List<Alien> getLesAliens() {
         return lesAliens;
     }
+    
 
 
     /**
-     * va renvoyer un message lorsque nous allons appuyer sur la touche gauche
+     * va renvoyer un message lorsque nous allons appuyer sur la touche gauche et va deplacer notre vaisseau si cela est possible
      */
     public void toucheGauche(){
         if (this.v.getPosX()-4>0){
@@ -100,7 +100,7 @@ public class GestionJeu{
 
 
     /**
-     * va renvoyer un message lorsque nous allons appuyer sur la touche droite
+     * va renvoyer un message lorsque nous allons appuyer sur la touche droite et va deplacer notre vaisseau si cela est possible
      */
     public void toucheDroite(){
         if (this.v.getPosX()+4<this.largeur-9){
@@ -111,7 +111,7 @@ public class GestionJeu{
 
 
     /**
-     * va renvoyer un message lorsque nous allons appuyer sur la touche espace
+     * va renvoyer un message lorsque nous allons appuyer sur la touche espace il va lancer un projectile si le vaisseau n'en a pas deja lancer un 
      */
     public void toucheEspace(){
         if (projectileVaisseau==null){
@@ -128,9 +128,17 @@ public class GestionJeu{
      */
     public EnsembleChaines getChaines(){
         EnsembleChaines e=new EnsembleChaines();
-        if (!this.perdu()){
-            e.ajouteChaine(10, getHauteur()-10, score.toString());
-            e.union(this.v.getEnsembleChaines());
+        if (!perdu()){
+            EnsembleChaines c=new EnsembleChaines();
+            c.ajouteChaine(10, getHauteur()-10, score.toString());
+            c.ajouteChaine(25, getHauteur()-10, this.v.getLaVie().toString());
+            for (ChainePositionnee chaine:c.getChaines()){
+               chaine.setIsWhite(true);
+            }
+            e.union(c);
+            //e.ajouteChaine(10, getHauteur()-10, score.toString());
+    
+    
             if (this.projectileVaisseau!=null){
                 e.union(this.projectileVaisseau.getEnsembleChaines());
             }
@@ -149,7 +157,30 @@ public class GestionJeu{
                     
                 }
             } 
-
+        
+            if (vieMaxVaisseau-1==this.v.getLaVie().getVie()){
+                if (nombreToursSansImage==0){
+                    vieMaxVaisseau=this.v.getLaVie().getVie();
+                    nombreToursSansImage=51;
+                }
+                if (nombreToursSansImage%11==0){e.union(this.v.getEnsembleChaines());}
+                nombreToursSansImage-=1;
+            }
+            else{e.union(this.v.getEnsembleChaines());}
+        }
+        else{
+            EnsembleChaines c=new EnsembleChaines();
+            c.ajouteChaine(10, getHauteur()-10, score.toString());
+            c.ajouteChaine(25, getHauteur()-10, this.v.getLaVie().toString());
+            for (ChainePositionnee chaine:c.getChaines()){
+               chaine.setIsWhite(true);
+            }
+            e.union(c);
+            e.union(this.v.getEnsembleChaines());
+            if (lesAliens.size()!=0){  
+                if (lesAliens.get(0).getDep()==false){for (Alien a:this.lesAliens){e.union(a.anime());}}
+                else{for (Alien a:this.lesAliens){e.union(a.getEnsembleChaines());}}
+            } 
         }
         return e;
     }
@@ -166,39 +197,45 @@ public class GestionJeu{
             else{
                 this.projectileVaisseau=null;                           // on remet le projectile à null si il à atteint le haut de la fenetre
             }
-            if (lesAliens.size()>0){                                    // si il y a toujours des aliens
-                for (Alien a:this.lesAliens){         
-                    if (projectileVaisseau !=null){   
-                        // on reverife que le projectile est different de null car 4 ligne avant on le remet à null, et cela fait que nous devons reverifie
-                        if(a.contient((int) Math.round(projectileVaisseau.getPosX()), (int) Math.round(projectileVaisseau.getPosY()))){
-                            // si l'allien se fait touche par le projectil
+        }        
 
-                            this.lesAliensTouche.add(a);        // on ajoute l'alien à la liste pour le supprimer plus tard dans la methode
-                            //projectileVaisseau=null;            // comme le projectile à touché l'alien on le remet à null pour qu'il disparaissent et pour qu'on puisse retirer.
-                            this.lesProjectilesQuiTouche.add(projectileVaisseau);   //on ajoute
-                        }
-                    }
-                }   
-            }
-            
-        }
+
         if (lesAliens.size()>0){                              // si il y à des aliens
             for (Alien a:this.lesAliens){                    // pour chaque alien
-                if (a.getProjectileAlien()!=null){          //si le projectille de l'alien est different de null(si il a tirer)
-                    
-                    if (v.contient((int) Math.round(a.getProjectileAlien().getPosX()),(int) Math.round(a.getProjectileAlien().getPosY()))){vaisseauTouche=true;}
-                     // si le tire de l'alienne touche le vaisseau on met le boolean vaisseauTouche à vrai
-                    
-                     if (a.getProjectileAlien().getPosY()>1){       //si la position y du projectile de l'alien ne depasse pas 1
-                        a.evolueProjectile();                       //on le fait evoluer
+
+                //on gere la partie entre les aliens et les projectiles
+                if (projectileVaisseau !=null){   
+                    // on verife que le projectile du vaisseau est different de null 
+                    if(a.contient((int) Math.round(projectileVaisseau.getPosX()), (int) Math.round(projectileVaisseau.getPosY()))){
+                        // si l'allien se fait touche par le projectil
+                        this.lesAliensTouche.add(a);        // on ajoute l'alien à la liste pour le supprimer plus tard dans la methode
+                        //this.lesProjectilesQuiTouche.add(projectileVaisseau);   //on ajoute
+                        projectileVaisseau=null;
                     }
-                    else{                                            //sinon
-                        a.setProjectileAlien();                     //on le remet à null
+                }
+
+
+
+                if (a.getProjectileAlien()!=null){          //si le projectille de l'alien est different de null (si il a tirer)
+                    
+                    if (v.contient((int) Math.round(a.getProjectileAlien().getPosX()),(int) Math.round(a.getProjectileAlien().getPosY()))){this.v.setLaVie();a.setProjectileAlien();}
+                    // si le tire de l'alienne touche le vaisseau, on change la valeur de la vie du vaisseau et du projectile de l'alien
+                    
+                    if (a.getProjectileAlien()!=null){   // à la ligne d'avant le projectile peut etre mis a null donc une reverification est necessaire
+                        if (a.getProjectileAlien().getPosY()>1){       //si la position y du projectile de l'alien ne depasse pas 1
+                            a.evolueProjectile();                       //on le fait evoluer
+                        }
+                        else{                                            //sinon
+                            a.setProjectileAlien();                     //on le remet à null
+                        }
                     }
-                    if (projectileVaisseau!=null && a.getProjectileAlien()!=null){
+                    if (projectileVaisseau!=null && a.getProjectileAlien()!=null){      
+                        // on verifie que les projectiles sont differents de null
                         if (projectileVaisseau.contient((int) Math.round(a.getProjectileAlien().getPosX()),(int) Math.round(a.getProjectileAlien().getPosY()))){
-                            a.setProjectileAlien();
-                            projectileVaisseau=null;
+                            //si le projectile de l'alienne est touché par celui du vaisseau
+                            a.setProjectileAlien();       // on met le projectile de l'alien à null
+
+                            projectileVaisseau=null;      // on met le projectile du vaisseau à null.
                         }
                     }
                 }
@@ -209,44 +246,37 @@ public class GestionJeu{
 
                 if (this.compteTours%20==0){a.changerDep();}    //tout les 20 tours de jeu on fait changer le deplacement(on change l'animation) de l'alien
             }
-            if(this.compteTours % 60 == 0){                     //tout les 60 tours de jeu
+            if(this.compteTours % 40 == 0){                     //tout les 40 tours de jeu
                 Random r=new Random();                              
                 int monNum = r.nextInt(lesAliens.size());  //crée un random entre 0 et la taille de la liste d'alien
-                lesAliens.get(monNum).tire();              // grace à ce random on choisit l'alien qui va tirer
+                lesAliens.get(monNum).tire();              // grâce à ce random on choisit l'alien qui va tirer
             }
 
-            if (this.compteTours==100){
+            if (this.compteTours==100){         // si on à fait 100 tours de jeu
 
-                for (Alien a:this.lesAliens){
-                    a.changerDeplacement();
-                    compteTours=0;
-                    a.setPosY(1);
+                for (Alien a:this.lesAliens){     // pour chaque alien
+                    a.changerDeplacement();         // on change le deplacement
+                    compteTours=0;                  // on remet le compte tours à 0
+                    a.setPosY(1);                 // on change leur position Y
                 }
             }
         }
-
-        //if (vaisseauTouche){perdu();}
         this.compteTours++;
         score.ajoute(1);
+
+        // à partir de la on gère les suppressions d'aliens
         if (lesAliens.size()>0){                    
             for (Alien a:this.lesAliensTouche){     // pour chaque alien touche
                 this.lesAliens.remove(a);           // on l'enleve de la liste
             }
         }
-        lesAliensTouche=new ArrayList<>();
-        for (Projectile p:this.lesProjectilesQuiTouche){            //
-            if (p.equals(this.projectileVaisseau)){projectileVaisseau=null;}
-        }
-        if(this.lesProjectilesQuiTouche.size()!=0){ 
-            this.lesProjectilesQuiTouche=new ArrayList<>();
-        }
-        //System.out.println((int)Math.round(lesAliens.get(0).getPosY()));
+        lesAliensTouche=new ArrayList<>(); // on remet à vide la liste des aliens touché 
     }   
 
 
     /**
-     * verifie que nous avons gagner le jeu
-     * @return un boolean qui va indiquer la condition
+     * verifie que nous avons gagner le jeu. Pour gagner il faut supprimer tous les aliens.
+     * @return un boolean qui va indiquer si nous avons gagner
      */
     public boolean gagner(){
         if (lesAliens.size()==0){return true;}
@@ -255,11 +285,12 @@ public class GestionJeu{
 
     
     /**
-     * methode qui permet de dire si nous avons perdu
-     * @return un boolean
+     * methode qui permet de dire si nous avons perdu. Pour perdre il faut soit que le tire d'un alien touche le vaisseau 2 fois, soit que les positionY de l'un des 
+     * alien touche la position Y du vaisseau
+     * @return un boolean indiquant si nous avons perdu
      */
     public boolean perdu(){
-        if (vaisseauTouche){return true;}
+        if (this.v.getLaVie().getVie()==0){return true;}
         if (lesAliens.size()!=0){
             for (Alien a:this.lesAliens){
                 if ((int) Math.round(a.getPosY())<=4){return true;}

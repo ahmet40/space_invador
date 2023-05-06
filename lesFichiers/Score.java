@@ -29,9 +29,11 @@ public class Score {
     @Override
     /**
      * cette methode permet de changer la façon dont notre score va s'afficher
+     * @return le String indiquant le score
      */
     public String toString(){
         return "Score : "+score+"";
     }
+
 
 }
