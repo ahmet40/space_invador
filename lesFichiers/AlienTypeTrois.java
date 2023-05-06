@@ -64,8 +64,6 @@ public class AlienTypeTrois extends Alien{
         if (this.projectile==null){
             this.projectile=new ProjectileAlienTypeTrois(positionCanon(), this.getPosY()+1);
         }
-        //this.projectileAlien=new ProjectileAlien(positionCanon(), posY+1);
-       //  this.projectileAlien.evolue();
     }
 
     @Override

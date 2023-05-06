@@ -16,8 +16,8 @@ public class GestionJeu{
     private int compteTours;
     private List<Alien> lesAliensTouche;
     private int vieMaxVaisseau;
-
     private int nombreToursSansImage;
+    private List<Murs> lesMurs;
     /**
      * ceci est la methode qui va crée notre gestionnaire de jeu
      */
@@ -47,6 +47,9 @@ public class GestionJeu{
         this.compteTours=0;
         this.lesAliensTouche=new ArrayList<>();
         this.nombreToursSansImage=50;
+        this.lesMurs=new ArrayList<>();
+        this.lesMurs.add(new Murs((double)this.largeur-15,(double)8));
+        this.lesMurs.add(new Murs((double)15,(double)8));
     }
 
 
@@ -131,8 +134,14 @@ public class GestionJeu{
         EnsembleChaines e=new EnsembleChaines();
         if (!perdu()){
             EnsembleChaines c=new EnsembleChaines();
-            c.ajouteChaine(10, getHauteur()-10, score.toString());
-            c.ajouteChaine(25, getHauteur()-10, this.v.getLaVie().toString());
+            c.ajouteChaine(2, getHauteur()-1, score.toString());
+            c.ajouteChaine(15, getHauteur()-1, this.v.getLaVie().toString());
+            
+            if (lesMurs.size()!=0){
+                for (Murs m:this.lesMurs){
+                    if (m.getLaVie().getVie()>0){e.union(m.getEnsembleChaines());}}
+            }
+
             for (ChainePositionnee chaine:c.getChaines()){
                chaine.setIsWhite(true);
             }
@@ -171,8 +180,8 @@ public class GestionJeu{
         }
         else{
             EnsembleChaines c=new EnsembleChaines();
-            c.ajouteChaine(10, getHauteur()-10, score.toString());
-            c.ajouteChaine(25, getHauteur()-10, this.v.getLaVie().toString());
+            c.ajouteChaine(2, getHauteur()-1, score.toString());
+            c.ajouteChaine(15, getHauteur()-1, this.v.getLaVie().toString());
             for (ChainePositionnee chaine:c.getChaines()){
                chaine.setIsWhite(true);
             }
@@ -198,8 +207,8 @@ public class GestionJeu{
             else{
                 this.projectileVaisseau=null;                           // on remet le projectile à null si il à atteint le haut de la fenetre
             }
-        }        
-
+        }    
+            
 
         if (lesAliens.size()>0){                              // si il y à des aliens
             for (Alien a:this.lesAliens){                    // pour chaque alien
@@ -208,8 +217,10 @@ public class GestionJeu{
                 if (projectileVaisseau !=null){   
                     // on verife que le projectile du vaisseau est different de null 
                     if(a.contient((int) Math.round(projectileVaisseau.getPosX()), (int) Math.round(projectileVaisseau.getPosY()))){
-                        // si l'allien se fait touche par le projectil
+                        
+                        // si l'alien se fait touche par le projectil
                         this.lesAliensTouche.add(a);        // on ajoute l'alien à la liste pour le supprimer plus tard dans la methode
+                        
                         //this.lesProjectilesQuiTouche.add(projectileVaisseau);   //on ajoute
                         projectileVaisseau=null;
                     }
@@ -221,13 +232,23 @@ public class GestionJeu{
                     
                     if (v.contient((int) Math.round(a.getProjectileAlien().getPosX()),(int) Math.round(a.getProjectileAlien().getPosY()))){this.v.setLaVie();a.setProjectileAlien();}
                     // si le tire de l'alienne touche le vaisseau, on change la valeur de la vie du vaisseau et du projectile de l'alien
-                    
+
                     if (a.getProjectileAlien()!=null){   // à la ligne d'avant le projectile peut etre mis a null donc une reverification est necessaire
-                        if (a.getProjectileAlien().getPosY()>1){       //si la position y du projectile de l'alien ne depasse pas 1
-                            a.evolueProjectile();                       //on le fait evoluer
+                        for (Murs m:this.lesMurs){
+                            if(m.contient((int) Math.round(a.getProjectileAlien().getPosX()),(int) Math.round(a.getProjectileAlien().getPosY()))){
+                                a.setProjectileAlien();
+                                m.setLaVie();
+                            }
+
                         }
-                        else{                                            //sinon
-                            a.setProjectileAlien();                     //on le remet à null
+                    
+                        if (a.getProjectileAlien()!=null){
+                            if (a.getProjectileAlien().getPosY()>1){       //si la position y du projectile de l'alien ne depasse pas 1
+                                a.evolueProjectile();                       //on le fait evoluer
+                            }
+                            else{                                            //sinon
+                                a.setProjectileAlien();                     //on le remet à null
+                            }
                         }
                     }
                     if (projectileVaisseau!=null && a.getProjectileAlien()!=null){      
@@ -260,6 +281,20 @@ public class GestionJeu{
                     compteTours=0;                  // on remet le compte tours à 0
                     a.setPosY(1);                 // on change leur position Y
                 }
+            }
+        }
+
+        
+        for (Murs m:this.lesMurs){
+            if (this.projectileVaisseau!=null){
+                if(m.contient((int) Math.round(projectileVaisseau.getPosX()),(int) Math.round(projectileVaisseau.getPosY()))){
+                    projectileVaisseau=null;
+                    m.setLaVie();
+                }
+            }
+            if (m.getLaVie().getVie()==0){
+                this.lesMurs.remove(m);
+                break;
             }
         }
         this.compteTours++;
