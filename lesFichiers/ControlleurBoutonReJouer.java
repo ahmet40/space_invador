@@ -1,8 +1,6 @@
 import javafx.event.EventHandler;
-import javafx.event.ActionEvent;
-import javafx.scene.control.Button;
-import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
+import javafx.event.ActionEvent;
 
 /**
  * Pemet de crée la class ControlleurBoutonJouer qui va attendre une action 
@@ -24,14 +22,13 @@ public class ControlleurBoutonReJouer implements EventHandler<ActionEvent>{
      * permet de lancer le jeu et supprimer le bouton une fois que l'on va cliquer dessus
      */
     public void handle(ActionEvent event) {
-        System.out.println("en train d'apuyer");
-        this.appli.lancerAnimation() ;       //une fois que le boutton est activé on lance le jeu.
-
-        Button rejouer = (Button) event.getSource();        // on crée un boutton
-        Pane parent = (Pane) rejouer.getParent();           // on l'ajoute dans le pane
-        parent.getChildren().remove(rejouer);               // et on supprime le boutton. Cela va permettre de supprimer le boutton qui est sur la page.
-
+        this.appli.quitter();                           //une fois que le boutton est activé on lance le jeu.
+        System.out.println("hehehehehee");
+        //appli.lancerAnimation();
+        //Button boutonJouer = (Button) event.getSource();        // on crée un boutton
+        //Pane parent = (Pane) boutonJouer.getParent();           // on l'ajoute dans le pane
+        //parent.getChildren().remove(boutonJouer);               // et on supprime le boutton. Cela va permettre de supprimer le boutton qui est sur la page.
+//
     }
-
           
 }

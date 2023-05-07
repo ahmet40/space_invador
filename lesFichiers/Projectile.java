@@ -18,7 +18,17 @@ public abstract class Projectile {
      * cette methode permet de reresenter le projectile sous forme d'un ensemble de chaine. Elle sera codé les class fille
      * @return ensemble de chaine
      */
-    public abstract EnsembleChaines getEnsembleChaines();
+    public EnsembleChaines getEnsembleChaines(){
+        EnsembleChaines ch=new EnsembleChaines();                       
+        ch.ajouteChaine((int)getPosX(),(int) getPosY(), "|");
+        for (ChainePositionnee c:ch.getChaines()){c.setIsWhite(true);}      
+        // grâce au changement de l'attribut setIsWhite sur cette chaine, on va pouvoir mettre la couleur blanche à ce projectile. 
+        return ch;
+    };
+
+
+
+
     /**
      * methode qui va renvoyer la valeur de la position en X du projectile
      * @return
@@ -51,8 +61,6 @@ public abstract class Projectile {
     /**
      * permet de faire evolue le projectile vers les aliens
      */
-    public void evolue(){
-        this.posY+=0.2;
-    };
+    public abstract void evolue();
 
 }

@@ -13,7 +13,7 @@ public class AlienTypeUn extends Alien{
     
     
     @Override
-    public Projectile getProjectileAlien() {
+    public ProjectileAlienTypeUn getProjectileAlien() {
         return projectile;
     }
 

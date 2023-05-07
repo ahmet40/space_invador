@@ -12,7 +12,7 @@ public class AlienTypeTrois extends Alien{
 
 
     @Override
-    public Projectile getProjectileAlien() {
+    public ProjectileAlienTypeTrois getProjectileAlien() {
         return projectile;
     }
 

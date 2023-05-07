@@ -6,7 +6,7 @@ public abstract class Alien {
     private double posY;
     private String deplacementDroiteGauche;
     private boolean dep;
-    //private Projectile projectileAlien;
+   // private Projectile projectileAlien;
 
     /**
      * permet de crée un alienne

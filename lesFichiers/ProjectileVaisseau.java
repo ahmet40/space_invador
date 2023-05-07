@@ -3,6 +3,7 @@
  */
 
 public class ProjectileVaisseau extends Projectile{
+    private double evoluer;
     /**
      * Cette methode permet de crée un ProjectilVaisseau en utilisant le constructeur de sa mére.
      * @param x  la position x representer par un double
@@ -10,13 +11,15 @@ public class ProjectileVaisseau extends Projectile{
      */
     public ProjectileVaisseau(double x,double y){
         super(x,y);                 // permet d'appeler le constructeur de sa mére avec les position X,Y
+        this.evoluer=0.4;
     }
 
     /**
      * cette methode permet de faire evoluer le projectile vers sa cible
      */
     public void evolue(){       
-        super.evolue();             // utilisation de la methode evolue() de la class mére 
+        double nouvelleposition=super.getPosY() + this.evoluer;
+        super.setPosY(nouvelleposition);
     }
     @Override
     
@@ -26,7 +29,7 @@ public class ProjectileVaisseau extends Projectile{
      */
     public EnsembleChaines getEnsembleChaines(){                    
         EnsembleChaines ch=new EnsembleChaines();                       
-        ch.ajouteChaine((int)super.getPosX(),(int)super.getPosY(), "|");
+        ch.ajouteChaine((int)super.getPosX(),(int)super.getPosY(), "⬛");
         for (ChainePositionnee c:ch.getChaines()){c.setIsWhite(true);}      
         // grâce au changement de l'attribut setIsWhite sur cette chaine, on va pouvoir mettre la couleur blanche à ce projectile. 
         return ch;
@@ -34,3 +37,6 @@ public class ProjectileVaisseau extends Projectile{
 
 
 }
+
+
+

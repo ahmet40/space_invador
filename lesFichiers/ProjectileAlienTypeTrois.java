@@ -26,7 +26,7 @@
      */
     public EnsembleChaines getEnsembleChaines(){
         EnsembleChaines ch=new EnsembleChaines();
-        ch.ajouteChaine((int)super.getPosX(),(int)super.getPosY(), "/");
+        ch.ajouteChaine((int)super.getPosX(),(int)super.getPosY(), "#");
         for (ChainePositionnee c:ch.getChaines()){c.setIsBlue(true);}
         // grâce au changement de l'attribut setIsBlue sur cette chaine, on va pouvoir mettre la couleur blanche à ce projectile. 
         return ch;

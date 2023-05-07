@@ -1,7 +1,5 @@
 import javafx.event.EventHandler;
 import javafx.event.ActionEvent;
-import javafx.scene.control.Button;
-import javafx.scene.layout.Pane;
 
 /**
  * Pemet de crée la class ControlleurBoutonJouer qui va attendre une action 
@@ -23,7 +21,6 @@ public class ControlleurBoutonJouer implements EventHandler<ActionEvent>{
      * permet de lancer le jeu et supprimer le bouton une fois que l'on va cliquer dessus
      */
     public void handle(ActionEvent event) {
-        System.out.println("2s65dxz6a5qs");
         this.appli.lancerAnimation();                           //une fois que le boutton est activé on lance le jeu.
         //appli.lancerAnimation();
         //Button boutonJouer = (Button) event.getSource();        // on crée un boutton

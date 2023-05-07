@@ -48,7 +48,7 @@ public class GestionJeu{
         this.lesAliensTouche=new ArrayList<>();
         this.nombreToursSansImage=50;
         this.lesMurs=new ArrayList<>();
-        this.lesMurs.add(new Murs((double)this.largeur-15,(double)8));
+        this.lesMurs.add(new Murs((double)this.largeur-25,(double)8));
         this.lesMurs.add(new Murs((double)15,(double)8));
     }
 
@@ -127,79 +127,67 @@ public class GestionJeu{
 
 
     /**
-     * cette methode va nous permettre d'avoid tous les objet( vaisseau, alienne, projectile) dans un ensemble de chaines
+     * cette methode va nous permettre d'avoir tous les objet( vaisseau, alienne, projectile) dans un ensemble de chaines
      * @return un ensemble de chaine
      */
     public EnsembleChaines getChaines(){
-        EnsembleChaines e=new EnsembleChaines();
-        if (!perdu()){
-            EnsembleChaines c=new EnsembleChaines();
-            c.ajouteChaine(2, getHauteur()-1, score.toString());
-            c.ajouteChaine(15, getHauteur()-1, this.v.getLaVie().toString());
+        EnsembleChaines e=new EnsembleChaines();                        // on commence par crée une chaine vide
+        if (!perdu()){                                      // si on n'a pas perdu
+            EnsembleChaines c=new EnsembleChaines();            
+            c.ajouteChaine(2, getHauteur()-1, score.toString());                // on ajoute le score à l'ensemble chaine c
+            c.ajouteChaine(15, getHauteur()-1, this.v.getLaVie().toString());     //on ajoute a c le vie du vaisseau
             
-            if (lesMurs.size()!=0){
-                for (Murs m:this.lesMurs){
+            for (ChainePositionnee chaine:c.getChaines()){              //pour chaque chaine dans c
+               chaine.setIsWhite(true);                         // on met la couleur a blanc
+            }
+            e.union(c);                                                 //on ajoute dans e l'ensemble chaine c
+            
+            
+            if (lesMurs.size()!=0){                                                         //si on a des murs
+                for (Murs m:this.lesMurs){                                                  //pour chaque murs
                     if (m.getLaVie().getVie()>0){e.union(m.getEnsembleChaines());}}
+                    //on verifie si sa vie est superieur à 0 et on l'ajoute
             }
-
-            for (ChainePositionnee chaine:c.getChaines()){
-               chaine.setIsWhite(true);
-            }
-            e.union(c);
-            //e.ajouteChaine(10, getHauteur()-10, score.toString());
     
-    
-            if (this.projectileVaisseau!=null){
-                e.union(this.projectileVaisseau.getEnsembleChaines());
+            if (this.projectileVaisseau!=null){                                         // si on a tiré
+                e.union(this.projectileVaisseau.getEnsembleChaines());                    // on affiche le projectile du vaisseau.
             }
-            if (lesAliens.size()!=0){  
-                if (lesAliens.get(0).getDep()==false){
-                    for (Alien a:this.lesAliens){
-                        e.union(a.anime());
-                        if (a.getProjectileAlien()!=null){e.union(a.getProjectileAlien().getEnsembleChaines());}
+            if (lesAliens.size()!=0){                                       // si on a des aliens
+                if (lesAliens.get(0).getDep()==false){                      
+                // si le deplacement du premiere alien est a false (il n'a pas ete anime). On regarde que le premier car pour chaque alien c'est le meme resultat.
+                    
+                    for (Alien a:this.lesAliens){                             //pour chaque alien
+                        e.union(a.anime());                                  // on anime l'alien
+                        if (a.getProjectileAlien()!=null){e.union(a.getProjectileAlien().getEnsembleChaines());}    //si il a tire on l'affiche
                     }
                 }
-                else{
-                    for (Alien a:this.lesAliens){
-                        e.union(a.getEnsembleChaines());
+                else{   
+                    for (Alien a:this.lesAliens){               // si le premiere alien a ete anime avant
+                        e.union(a.getEnsembleChaines());        // on affiche sa façon non anime
                         if (a.getProjectileAlien()!=null){e.union(a.getProjectileAlien().getEnsembleChaines());}
                     }
                     
                 }
             } 
         
-            if (vieMaxVaisseau-1==this.v.getLaVie().getVie()){
-                if (nombreToursSansImage==0){
-                    vieMaxVaisseau=this.v.getLaVie().getVie();
-                    nombreToursSansImage=51;
+            if (vieMaxVaisseau-1==this.v.getLaVie().getVie()){              //si le vaisseau vient de prendre un projectile d'un alien
+                if (nombreToursSansImage==0){                               // le nombre de tours sans vaisseau vaut 0
+                    vieMaxVaisseau=this.v.getLaVie().getVie();              // on decroit de 1 la vie max du vaisseau
+                    nombreToursSansImage=51;                                // on remet à 51 le nombre d'image sans tours
                 }
-                if (nombreToursSansImage%11==0){e.union(this.v.getEnsembleChaines());}
-                nombreToursSansImage-=1;
+                if (nombreToursSansImage%11==0){e.union(this.v.getEnsembleChaines());}      // si le nombre d'image sans vaisseau est modulo 11 on va afficher le vaisseau
+                nombreToursSansImage-=1;            // on decroit le nombre de tours sans vaisseau
             }
-            else{e.union(this.v.getEnsembleChaines());}
-        }
-        else{
-            EnsembleChaines c=new EnsembleChaines();
-            c.ajouteChaine(2, getHauteur()-1, score.toString());
-            c.ajouteChaine(15, getHauteur()-1, this.v.getLaVie().toString());
-            for (ChainePositionnee chaine:c.getChaines()){
-               chaine.setIsWhite(true);
-            }
-            e.union(c);
-            e.union(this.v.getEnsembleChaines());
-            if (lesAliens.size()!=0){  
-                if (lesAliens.get(0).getDep()==false){for (Alien a:this.lesAliens){e.union(a.anime());}}
-                else{for (Alien a:this.lesAliens){e.union(a.getEnsembleChaines());}}
-            } 
+            else{e.union(this.v.getEnsembleChaines());}         // sinon on va afficher le vaisseau
         }
         return e;
     }
 
-    
+
     /**
-     * methode qui represente tous ce qui va se passer lors d'un tour dans le jeu
+     * Permet de faire evoluer le projectile du vaisseau ou de le suppirmer
      */
-    public void jouerUnTour(){
+    private void evolutionProjectileVaisseau(){
         if (projectileVaisseau!=null){
             if (this.projectileVaisseau.getPosY()<this.hauteur){        // on regarde si la position y du projectil est inferieur à la longueur de la fenetre
                 this.projectileVaisseau.evolue();                       // on va faire evoluer le projectile sur la meme position x
@@ -207,13 +195,99 @@ public class GestionJeu{
             else{
                 this.projectileVaisseau=null;                           // on remet le projectile à null si il à atteint le haut de la fenetre
             }
-        }    
+        } 
+    }
+
+    /**
+     * Cette methode permet de changer les vie des murs si ils sont touché par un alien ou par le projectile du vaisseau
+     */
+    private void GestionDesMurs(){
+        if (this.lesMurs.size()!=0){            //si il y a des murs
+            for (Murs m:this.lesMurs){
+                if (this.projectileVaisseau!=null){             // si le projectile du vaisseau est different de null (on  a tiré)
+                    if(m.contient((int) Math.round(projectileVaisseau.getPosX()),(int) Math.round(projectileVaisseau.getPosY()))){  
+                        //si le murs contient le projectile du vaisseau
+                        
+                        projectileVaisseau=null;            //on supprime le projectil
+                        m.setLaVie();                       // on décroit la vie du murs
+                    }
+                }
+                if (lesAliens.size()>0){                              // si il y à des aliens
+                    for (Alien a:this.lesAliens){                    // pour chaque alien
+                        if (a.getProjectileAlien()!=null){
+                            if(m.contient((int) Math.round(a.getProjectileAlien().getPosX()),(int) Math.round(a.getProjectileAlien().getPosY()))){
+                                // si le tire de l'alien touche le murs
+                                a.setProjectileAlien();         // on change l'etat du projectile de l'alien
+                                m.setLaVie();                   
+                            }
+                        }
+                    }
+                }    
+
+                if (m.getLaVie().getVie()==0){              // si la vie du murs vaut 0
+                    this.lesMurs.remove(m);                 // on supprime le murs
+                    break;                                  // on sort de la boucle.
+                }
+            }
+        }
+    }
+
+    /**
+     * Cette methode permet de supprimer les alien si ils sont touché par les projectile du vaisseau
+     */
+    private void suppresionAlien(){
+        if (lesAliens.size()>0){                        //si il ya des aliens
+            if (lesAliensTouche.size()!=0){                                     // si il y a des aliens qui se sont fait touché
+                for (Alien a:this.lesAliensTouche){     // pour chaque alien touché
+                    if (a instanceof AlienTypeUn ){score.ajoute(10);}               //on modifie le score par rapport au type de l'alien
+                    if (a instanceof AlienTypeDeux ){score.ajoute(20);}
+                    if (a instanceof AlienTypeTrois ){score.ajoute(50);}
+                    this.lesAliens.remove(a);           // on enleve l'alien  de la liste
+                }
+            }
             
+        }
+        lesAliensTouche=new ArrayList<>(); // on remet à vide la liste des aliens touché 
+    }
+
+    /**
+     * Cette methode va faire tirer les aliens ennemis tous les x tours, changer leur position Y tous les x tours,changer leur deplacement, les animer.
+     */
+    private void GererLesTours(){
+        if (lesAliens.size()!=0){
+            for (Alien a:this.lesAliens){
+                if(this.compteTours % this.getLargeur()/100 == 0){             // tout les 10 tour de jeu
+                    a.anime();                              //l'alien change d'animation
+                }
+
+                if (this.compteTours%20==0){a.changerDep();}    //tout les 20 tours de jeu on fait changer le deplacement(on change l'animation) de l'alien
+                
+            }
+            if(this.compteTours % (this.largeur/2)-10 == 0){                     //tout les 40 tours de jeu
+                Random r=new Random();                              
+                int monNum = r.nextInt(lesAliens.size());  //crée un random entre 0 et la taille de la liste d'alien
+                lesAliens.get(monNum).tire();              // grâce à ce random on choisit l'alien qui va tirer
+            }
+
+            if (this.compteTours==this.largeur){         // si on à fait toutes la largeur du jeu
+                for (Alien a:this.lesAliens){     // pour chaque alien
+                    a.changerDeplacement();         // on change le deplacement
+                    compteTours=0;                  // on remet le compte tours à 0
+                    a.setPosY(1);                 // on change leur position Y
+                }
+            }
+        }
+    }   
+
+    /**
+     * Methode qui permet de gerer la collision entre projectile, de faire evoluer les aliens, de voir si le tire de l'alien touche le projectile ou le vaissea
+     * La parti de supprsion des alliens sera gerer par une autre methode. 
+     */
+    private void GererLesAliens(){
 
         if (lesAliens.size()>0){                              // si il y à des aliens
             for (Alien a:this.lesAliens){                    // pour chaque alien
-
-                //on gere la partie entre les aliens et les projectiles
+                //on gere la partie entre les  aliens et le projectile du vaisseau
                 if (projectileVaisseau !=null){   
                     // on verife que le projectile du vaisseau est different de null 
                     if(a.contient((int) Math.round(projectileVaisseau.getPosX()), (int) Math.round(projectileVaisseau.getPosY()))){
@@ -226,87 +300,49 @@ public class GestionJeu{
                     }
                 }
 
-
-
                 if (a.getProjectileAlien()!=null){          //si le projectille de l'alien est different de null (si il a tirer)
                     
                     if (v.contient((int) Math.round(a.getProjectileAlien().getPosX()),(int) Math.round(a.getProjectileAlien().getPosY()))){this.v.setLaVie();a.setProjectileAlien();}
-                    // si le tire de l'alienne touche le vaisseau, on change la valeur de la vie du vaisseau et du projectile de l'alien
-
-                    if (a.getProjectileAlien()!=null){   // à la ligne d'avant le projectile peut etre mis a null donc une reverification est necessaire
-                        for (Murs m:this.lesMurs){
-                            if(m.contient((int) Math.round(a.getProjectileAlien().getPosX()),(int) Math.round(a.getProjectileAlien().getPosY()))){
-                                a.setProjectileAlien();
-                                m.setLaVie();
-                            }
-
-                        }
-                    
-                        if (a.getProjectileAlien()!=null){
-                            if (a.getProjectileAlien().getPosY()>1){       //si la position y du projectile de l'alien ne depasse pas 1
-                                a.evolueProjectile();                       //on le fait evoluer
-                            }
-                            else{                                            //sinon
-                                a.setProjectileAlien();                     //on le remet à null
-                            }
-                        }
+                    // si le tire de l'alien touche le vaisseau, on change la valeur de la vie du vaisseau et du projectile de l'alien
+                }   
+                if (a.getProjectileAlien()!=null){// à la ligne d'avant le projectile peut être mis a null donc une reverification est necessaire
+                    if (a.getProjectileAlien().getPosY()>1){       //si la position y du projectile de l'alien ne depasse pas 1
+                        a.evolueProjectile();                       //on le fait evoluer
                     }
-                    if (projectileVaisseau!=null && a.getProjectileAlien()!=null){      
-                        // on verifie que les projectiles sont differents de null
-                        if (projectileVaisseau.contient((int) Math.round(a.getProjectileAlien().getPosX()),(int) Math.round(a.getProjectileAlien().getPosY()))){
-                            //si le projectile de l'alienne est touché par celui du vaisseau
-                            a.setProjectileAlien();       // on met le projectile de l'alien à null
-
-                            projectileVaisseau=null;      // on met le projectile du vaisseau à null.
-                        }
+                    else{                                            //sinon
+                        a.setProjectileAlien();                     //on le remet à null
                     }
                 }
-                a.evolue();                                 // les projectile ont été gere maintenant on fait evoluer l'alienne (il se deplace)
-                if(this.compteTours % 10 == 0){             // tout les 10 tour de jeu
-                    a.anime();                              //l'alien change d'animation
+                
+                if (projectileVaisseau!=null && a.getProjectileAlien()!=null){    
+                    // on verifie que les projectiles sont differents de null
+                    if (projectileVaisseau.contient((int) Math.round(a.getProjectileAlien().getPosX()),(int) Math.round(a.getProjectileAlien().getPosY()))){
+                        //si le projectile de l'alien est touché par celui du vaisseau
+
+                        a.setProjectileAlien();       // on met le projectile de l'alien à null
+                        projectileVaisseau=null;      // on met le projectile du vaisseau à null.
+                    }
                 }
-
-                if (this.compteTours%20==0){a.changerDep();}    //tout les 20 tours de jeu on fait changer le deplacement(on change l'animation) de l'alien
-            }
-            if(this.compteTours % 40 == 0){                     //tout les 40 tours de jeu
-                Random r=new Random();                              
-                int monNum = r.nextInt(lesAliens.size());  //crée un random entre 0 et la taille de la liste d'alien
-                lesAliens.get(monNum).tire();              // grâce à ce random on choisit l'alien qui va tirer
-            }
-
-            if (this.compteTours==100){         // si on à fait 100 tours de jeu
-
-                for (Alien a:this.lesAliens){     // pour chaque alien
-                    a.changerDeplacement();         // on change le deplacement
-                    compteTours=0;                  // on remet le compte tours à 0
-                    a.setPosY(1);                 // on change leur position Y
-                }
+                
+                a.evolue();                   // les projectile ont été gere maintenant on fait evoluer l'alien (il se deplace)
             }
         }
+    }
 
-        
-        for (Murs m:this.lesMurs){
-            if (this.projectileVaisseau!=null){
-                if(m.contient((int) Math.round(projectileVaisseau.getPosX()),(int) Math.round(projectileVaisseau.getPosY()))){
-                    projectileVaisseau=null;
-                    m.setLaVie();
-                }
-            }
-            if (m.getLaVie().getVie()==0){
-                this.lesMurs.remove(m);
-                break;
-            }
-        }
+
+
+    
+    /**
+     * methode qui represente tous ce qui va se passer lors d'un tour dans le jeu
+     */
+    public void jouerUnTour(){
+        evolutionProjectileVaisseau();                  // appel de la methode privé evolution Projectile.
+        GestionDesMurs();                               // appel de la methode pour gerer les murs.
+        GererLesAliens();                               // appel de la methode gererLesAliens qui gerer faire tous ce qui peut se passer avec les aliens
+
+        GererLesTours();         // appel de la methode qui permet de gerer ce qui se passe à x tours
         this.compteTours++;
-        score.ajoute(1);
-
-        // à partir de la on gère les suppressions d'aliens
-        if (lesAliens.size()>0){                    
-            for (Alien a:this.lesAliensTouche){     // pour chaque alien touche
-                this.lesAliens.remove(a);           // on l'enleve de la liste
-            }
-        }
-        lesAliensTouche=new ArrayList<>(); // on remet à vide la liste des aliens touché 
+        suppresionAlien();      // permet de supprimer les aliens touché. 
     }   
 
 
