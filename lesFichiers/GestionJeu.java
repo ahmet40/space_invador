@@ -2,7 +2,15 @@ import java.util.List;
 import java.util.ArrayList;
 import java.lang.Math;
 import java.util.Random;
-
+import javax.sound.sampled.AudioInputStream;
+ import javax.sound.sampled.AudioSystem;
+ import javax.sound.sampled.Clip;
+ import javax.sound.sampled.FloatControl;
+ import javax.sound.sampled.LineEvent;
+ import javax.sound.sampled.LineUnavailableException;
+ import javax.sound.sampled.UnsupportedAudioFileException;
+ import java.io.File;
+ import java.io.IOException;
 /**
  * permet de cree le gestionneur du jeu
  */
@@ -29,21 +37,7 @@ public class GestionJeu{
         this.vieMaxVaisseau=v.getLaVie().getVie();                                  // on crée le maximum de la vie de notre vaisseau
         this.score=new Score();                                                     // on crée le score
         this.lesAliens=new ArrayList<>();                       //création de la liste d'alien
-        for (int i=0;i<4;++i){                                  // on va crée 4 lignes d'alien
-            int positionXdesAliens=5;
-            while (positionXdesAliens<this.largeur-20){
-                if (i==0){this.lesAliens.add(new AlienTypeUn(positionXdesAliens, this.hauteur/2));
-                    positionXdesAliens+=15;}
-                else if (i==2 || i==1){
-                    this.lesAliens.add(new AlienTypeDeux(positionXdesAliens, (this.hauteur/2)+7*i));
-                    positionXdesAliens+=15;
-                }
-                else{
-                    this.lesAliens.add(new AlienTypeTrois(positionXdesAliens, (this.hauteur/2)+7*i));
-                    positionXdesAliens+=15;
-                }
-            }
-        }
+        this.generAliens();
         this.compteTours=0;
         this.lesAliensTouche=new ArrayList<>();
         this.nombreToursSansImage=50;
@@ -52,6 +46,24 @@ public class GestionJeu{
         this.lesMurs.add(new Murs((double)15,(double)8));
     }
 
+
+    public void generAliens(){
+        for (int i=0;i<4;++i){                                  // on va crée 4 lignes d'alien
+            int positionXdesAliens=5;
+            while (positionXdesAliens<this.largeur-20){
+                if (i==0){this.lesAliens.add(new AlienTypeUn(positionXdesAliens, this.hauteur/2));          // premiere ligne à posy=30
+                    positionXdesAliens+=15;}
+                else if (i==2 || i==1){
+                    this.lesAliens.add(new AlienTypeDeux(positionXdesAliens, (this.hauteur/2)+7*i));        //deuxieme et troisieme ligne à posy=30+7*i
+                    positionXdesAliens+=15;
+                }
+                else{
+                    this.lesAliens.add(new AlienTypeTrois(positionXdesAliens, (this.hauteur/2)+7*i));       // quatrieme à poy=30+7*3
+                    positionXdesAliens+=15;
+                }
+            }
+        }
+    }
 
     /**
      * permet de renvoyer la hauteur 
@@ -121,6 +133,7 @@ public class GestionJeu{
         if (projectileVaisseau==null){
             this.projectileVaisseau=new ProjectileVaisseau(this.v.positionCanon(), 4);
             System.out.println(this.projectileVaisseau);
+            jouerSon("shoot.wav",0.5f);
         }
         System.out.println("Appui sur la touche espace");
     } 
@@ -343,17 +356,8 @@ public class GestionJeu{
         GererLesTours();         // appel de la methode qui permet de gerer ce qui se passe à x tours
         this.compteTours++;
         suppresionAlien();      // permet de supprimer les aliens touché. 
+        if (this.lesAliens.size()==0){generAliens();}    // si il n'y a plus d'aliens ont crée une seconde vague.
     }   
-
-
-    /**
-     * verifie que nous avons gagner le jeu. Pour gagner il faut supprimer tous les aliens.
-     * @return un boolean qui va indiquer si nous avons gagner
-     */
-    public boolean gagner(){
-        if (lesAliens.size()==0){return true;}
-        return false;
-    }
 
     
     /**
@@ -369,5 +373,38 @@ public class GestionJeu{
             }
         }
         return false;
+    }
+    /**
+     * Permet de jouer un son dans le fichier.
+     * @param nomFichier un chaine de caractere qui permet de donner le lien du fichier que l'on va jouer
+     */
+    private void jouerSon(String nomFichier, float volume) {
+        try {
+            File fichierAudio = new File(nomFichier);
+            AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(fichierAudio);
+            Clip clip = AudioSystem.getClip();
+            clip.open(audioInputStream);
+    
+            // Récupère le contrôle du volume
+            FloatControl gainControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
+    
+            // Convertit le volume en décibels (dB)
+            float gain = (float) (Math.log10(volume) * 20);
+    
+            // Définit le volume
+            gainControl.setValue(gain);
+    
+            clip.start();
+    
+            // Attente de la fin de la lecture
+            clip.addLineListener(event -> { // -> est utilisé pour définir une expression lambda ou une fonction anonyme. 
+                                            // cette fonction anonyme sera utilisée dans le cadre de la méthode addLineListener de l'objet clip.
+                if (event.getType() == LineEvent.Type.STOP) {
+                    clip.close(); // Libère les ressources audio
+                }
+            });
+        } catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
+            e.printStackTrace();
+        }
     }
 }

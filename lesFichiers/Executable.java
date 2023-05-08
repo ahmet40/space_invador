@@ -14,7 +14,6 @@ import javafx.stage.Stage;
 import javafx.scene.Group;
 import javafx.scene.text.Text;
 import javafx.scene.text.Font;
-import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
@@ -26,8 +25,6 @@ import javafx.scene.image.Image;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.layout.BackgroundImage;
-import javax.swing.*;
-
 
 /**
  * creation de la class executable qui va lancer notre application.
@@ -42,6 +39,7 @@ public class Executable extends Application {
     private Stage primaryStage;
     private boolean rejoue=false;
     private int jouer=-1;
+    
 
     
 
@@ -96,17 +94,10 @@ public class Executable extends Application {
         Timeline timeline = new Timeline(
                 new KeyFrame(Duration.seconds(0),
                     new EventHandler<ActionEvent>() {
-                        @Override public void handle(ActionEvent actionEvent) {
-                            if (gestionnaire.gagner()){
-                                jouer=1;
-                                String nv="Vous venez de gagnez, vous avez tué tous les aliens votre score est : "+gestionnaire.getScore().getScore();
-
-                                primaryStage.setScene(fin(primaryStage, nv));
-                            }                            
+                        @Override public void handle(ActionEvent actionEvent) {                          
                             if (gestionnaire.perdu()){
                                 jouer=1;
-                                String nv="Vous venez de perdre, vous avez tué : " +(28-gestionnaire.getLesAliens().size())+" alien, "+ "votre score est : "+ gestionnaire.getScore().getScore();
-
+                                String nv="Vous venez de perdre, votre score est : "+ gestionnaire.getScore().getScore();
                                 primaryStage.setScene(fin(primaryStage, nv));
 
                             }
@@ -122,8 +113,6 @@ public class Executable extends Application {
         timeline.setCycleCount(this.jouer);
         
         timeline.play();
-       // if (!root.getChildren().contains(caracteres)){root.getChildren().add(caracteres);}
-        
     }
 
     public Scene Acceuil(){
@@ -131,14 +120,14 @@ public class Executable extends Application {
             this.gestionnaire = new GestionJeu();
             // Créer un titre centré
             Text title = new Text("SPACE INVADERS");
-            title.setFill(Color.LIGHTGREEN);
-            title.setFont(Font.font("Arial", 40));
+            title.setFill(Color.LIGHTGREEN);                            // change la couleur d'ecriture du texte
+            title.setFont(Font.font("Arial", 40));  
             VBox.setMargin(title, new javafx.geometry.Insets(50, 0, 50, 0)); //ajoute une marge de 50 pixels en haut et en bas
             VBox.setVgrow(title, javafx.scene.layout.Priority.ALWAYS);
 
             // Créer un bouton centré en dessous du titre
             Button button = new Button("Jouer");
-            button.setOnAction(new ControlleurBoutonJouer(this));
+            button.setOnAction(new ControlleurBoutonJouer(this));               // ajout d'un controlleur au bouton
             VBox.setMargin(button, new javafx.geometry.Insets(0, 0, 50, 0)); // ajoute une marge de 50 pixels en bas
             VBox.setVgrow(button, javafx.scene.layout.Priority.ALWAYS);
 
@@ -195,27 +184,29 @@ public class Executable extends Application {
          * @param ch        La chaine de caractere su l'on va affichet en tant que texte.
          */
         public Scene fin(Stage stage,String ch){
-            this.root= new AnchorPane();
-            this.gestionnaire = new GestionJeu();
+            this.root= new AnchorPane();                            //on met le root à vide
+
+            this.gestionnaire = new GestionJeu();                   
+            
             Text title = new Text(ch);
-            title.setFill(Color.LIGHTGREEN);
+            title.setFill(Color.YELLOW);                
             title.setFont(Font.font("Arial", 15));
             VBox.setMargin(title, new javafx.geometry.Insets(50, 0, 50, 0)); //ajoute une marge de 50 pixels en haut et en bas
             VBox.setVgrow(title, javafx.scene.layout.Priority.ALWAYS);
 
-            Button button1 = new Button("Quitter");                         // creation d'un boutton qui va permettre de quiter l'application
+            Button button1 = new Button("Quitter");                         // création d'un boutton qui va permettre de quiter l'application
             button1.setOnAction(new EventHandler<ActionEvent>() {
                 @Override
                 public void handle(ActionEvent e){
                     quitter();
-                    System.out.println("on vien de sortir");
+                    System.out.println("Vous avez quitter l application");
                 }
             });
-            Button button2=new Button("Rejouer");                           // creation d'un bouton qui va permettre de rejouer une partie
+            Button button2=new Button("Rejouer");                           // création d'un bouton qui va permettre de rejouer une partie
             button2.setOnAction(new EventHandler<ActionEvent>() {
                 @Override
                 public void handle(ActionEvent e){
-                    System.out.println("on va rejouer");
+                    System.out.println("vous voullez rejouez");
                     primaryStage.setScene(Acceuil());
                 }
             });
@@ -228,8 +219,8 @@ public class Executable extends Application {
             // Ajouter le bouton à un VBox (vertical box) pour les aligner verticalement
             this.vbox = new VBox();
             this.vbox.setAlignment(Pos.CENTER);
-            this.vbox.getChildren().addAll(title,button1,button2);
-            this.vbox.setPadding(new Insets((gestionnaire.getHauteur()*10)/2-70,(gestionnaire.getLargeur()*10)/2+30,(gestionnaire.getHauteur()*10)/2-70,((gestionnaire.getLargeur()*10)/2)/2-150));
+            this.vbox.getChildren().addAll(title,button2,button1);
+            this.vbox.setPadding(new Insets((gestionnaire.getHauteur()*10)/2-70,(gestionnaire.getLargeur()*10)/2+30,(gestionnaire.getHauteur()*10)/2-70,((gestionnaire.getLargeur()*10)/2)/2-170));
             root.getChildren().add(vbox);
 
             Image img=new Image("Space.png",gestionnaire.getLargeur()+300,gestionnaire.getHauteur()+300,true,true);         // on crée l'image que l'on veut mettre

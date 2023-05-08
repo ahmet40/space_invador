@@ -4,21 +4,19 @@
 public abstract class Alien {
     private double posX;
     private double posY;
-    private String deplacementDroiteGauche;
+    private boolean deplacementDroiteGauche;
     private boolean dep;
-   // private Projectile projectileAlien;
 
     /**
-     * permet de crée un alienne
-     * @param posX sa position en x representer par un entier 
-     * @param posY se position en y representer par un entier
+     * permet de crée un alien
+     * @param posX sa position en x representer par un double 
+     * @param posY se position en y representer par un double
      */
     public Alien(double posX,double posY){
         this.posX=posX;
         this.posY=posY;
-        this.deplacementDroiteGauche="droite";
+        this.deplacementDroiteGauche=true;
         this.dep=false;
-        //this.projectileAlien=null;
         
     }
     
@@ -97,8 +95,8 @@ public abstract class Alien {
      * permet de changer la valeur de deplecement DroiteGauche
      */
     public void changerDeplacement(){
-        if (deplacementDroiteGauche.equals("droite")){deplacementDroiteGauche="gauche";}
-        else{deplacementDroiteGauche="droite";}
+        if (deplacementDroiteGauche){deplacementDroiteGauche=false;}        //si ils se deplacait à droite on va maintenant les deplacer à gauche
+        else{deplacementDroiteGauche=true;}                             // il vont maintenant se deplacer à droite
     }
 
     /**
@@ -106,17 +104,11 @@ public abstract class Alien {
      */
     public void evolue(){
 
-        if (deplacementDroiteGauche.equals("droite")){
+        if (deplacementDroiteGauche){
             posX+=0.1;
-//            anime();
-            //if (dep){dep=false;}
-            //else{dep=true;}
         }
         else{
             posX-=0.1;
-//            anime();
-            //if (dep){dep=false;}
-            //else{dep=true;}
         }
 
     }
@@ -145,6 +137,14 @@ public abstract class Alien {
         }
         return false;
 
+    }
+    @Override
+    /** 
+     *  Permet d'avoir le hashcode de l'alien
+     * @return renvoie un int indiquant le hashcode de l'alien
+     */
+    public int hashCode() {
+        return 17*(int)posX+31*(int) posY;
     }
 
     /**

@@ -26,7 +26,7 @@ public class ProjectileAlienTypeUn extends Projectile{
      */
     public EnsembleChaines getEnsembleChaines(){
         EnsembleChaines ch=new EnsembleChaines();
-        ch.ajouteChaine((int)super.getPosX(),(int)super.getPosY(), "¤");
+        ch.ajouteChaine((int)super.getPosX(),(int)super.getPosY(), "▼");
         for (ChainePositionnee c:ch.getChaines()){c.setIsGreen(true);}
         // grâce au changement de l'attribut setIsGreen sur cette chaine, on va pouvoir mettre la couleur blanche à ce projectile. 
         return ch;
